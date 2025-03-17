@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'Open Sans';
+    src: url('src/assets/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: sans-serif;
+}
+
+body {
+    background-color: #282c34;
+}
+
+input:focus {
+    outline: none;
+}
+
+button:hover {
+    transform: scale(1.03);
+  }
