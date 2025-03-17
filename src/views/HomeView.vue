@@ -1,41 +1,156 @@
 <script setup>
-import { ref, computed } from 'vue'
-import MovieCard from '@/components/MovieCard.vue'
+import { ref, computed } from "vue";
+import MovieCard from "@/components/MovieCard.vue";
 
 const movies = ref([
-  { id: 1, title: 'Avengers: Infinity War', playtime: '2h 29m', year: '2018', cover: 'src/assets/images/movie_covers/51HUrY93cwL._AC_UF1000,1000_QL80__jpg.png' },
-  { id: 2, title: 'Avengers: Endgame', playtime: '3h 2m', year: '2019', cover: 'src/assets/images/movie_covers/91-UCbbhoiL_jpg.png' },
-  { id: 3, title: 'Cover', playtime: '2h 10m', year: '2021', cover: 'src/assets/images/movie_covers/bcc68be4-eede-409b-a63d-e179b28d19b4_jpg.png' },
-  { id: 4, title: 'Black Panther', playtime: '2h 15m', year: '2018', cover: 'src/assets/images/movie_covers/images.png' },
-  { id: 5, title: 'Iron Man 2', playtime: '2h 4m', year: '2010', cover: 'src/assets/images/movie_covers/iron_man_two_ver6_jpg.png' },
-  { id: 6, title: 'Guardians of the Galaxy', playtime: '2h 1m', year: '2014', cover: 'src/assets/images/movie_covers/marvel-guardians-of-the-galaxy-61x91.5cm-movie-poster-37728-1-p_jpg.png' },
-  { id: 7, title: 'Lorem Ipsum', playtime: '1h 30m', year: '2021', cover: 'src/assets/images/movie_covers/movie-poster-design-template_841014-16988_jpg.png' },
-  { id: 8, title: 'Smile', playtime: '1h 45m', year: '2021', cover: 'src/assets/images/movie_covers/s-l400_jpg.png' },
-  { id: 9, title: 'Avengers: Infinity War', playtime: '2h 29m', year: '2018', cover: 'src/assets/images/movie_covers/51HUrY93cwL._AC_UF1000,1000_QL80__jpg.png' },
-  { id: 10, title: 'Avengers: Endgame', playtime: '3h 2m', year: '2019', cover: 'src/assets/images/movie_covers/91-UCbbhoiL_jpg.png' },
-  { id: 11, title: 'Cover', playtime: '2h 10m', year: '2021', cover: 'src/assets/images/movie_covers/bcc68be4-eede-409b-a63d-e179b28d19b4_jpg.png' },
-  { id: 12, title: 'Black Panther', playtime: '2h 15m', year: '2018', cover: 'src/assets/images/movie_covers/images.png' },
-  { id: 13, title: 'Iron Man 2', playtime: '2h 4m', year: '2010', cover: 'src/assets/images/movie_covers/iron_man_two_ver6_jpg.png' },
-  { id: 14, title: 'Guardians of the Galaxy', playtime: '2h 1m', year: '2014', cover: 'src/assets/images/movie_covers/marvel-guardians-of-the-galaxy-61x91.5cm-movie-poster-37728-1-p_jpg.png' },
-  { id: 15, title: 'Lorem Ipsum', playtime: '1h 30m', year: '2021', cover: 'src/assets/images/movie_covers/movie-poster-design-template_841014-16988_jpg.png' },
-  { id: 16, title: 'Smile', playtime: '1h 45m', year: '2021', cover: 'src/assets/images/movie_covers/s-l400_jpg.png' }
-])
-const SearchQuery = ref('')
+  {
+    id: 1,
+    title: "Avengers: Infinity War",
+    playtime: "2h 29m",
+    year: "2018",
+    cover:
+      "src/assets/images/movie_covers/51HUrY93cwL._AC_UF1000,1000_QL80__jpg.png",
+  },
+  {
+    id: 2,
+    title: "Avengers: Endgame",
+    playtime: "3h 2m",
+    year: "2019",
+    cover: "src/assets/images/movie_covers/91-UCbbhoiL_jpg.png",
+  },
+  {
+    id: 3,
+    title: "Cover",
+    playtime: "2h 10m",
+    year: "2021",
+    cover:
+      "src/assets/images/movie_covers/bcc68be4-eede-409b-a63d-e179b28d19b4_jpg.png",
+  },
+  {
+    id: 4,
+    title: "Black Panther",
+    playtime: "2h 15m",
+    year: "2018",
+    cover: "src/assets/images/movie_covers/images.png",
+  },
+  {
+    id: 5,
+    title: "Iron Man 2",
+    playtime: "2h 4m",
+    year: "2010",
+    cover: "src/assets/images/movie_covers/iron_man_two_ver6_jpg.png",
+  },
+  {
+    id: 6,
+    title: "Guardians of the Galaxy",
+    playtime: "2h 1m",
+    year: "2014",
+    cover:
+      "src/assets/images/movie_covers/marvel-guardians-of-the-galaxy-61x91.5cm-movie-poster-37728-1-p_jpg.png",
+  },
+  {
+    id: 7,
+    title: "Lorem Ipsum",
+    playtime: "1h 30m",
+    year: "2021",
+    cover:
+      "src/assets/images/movie_covers/movie-poster-design-template_841014-16988_jpg.png",
+  },
+  {
+    id: 8,
+    title: "Smile",
+    playtime: "1h 45m",
+    year: "2021",
+    cover: "src/assets/images/movie_covers/s-l400_jpg.png",
+  },
+  {
+    id: 9,
+    title: "Avengers: Infinity War",
+    playtime: "2h 29m",
+    year: "2018",
+    cover:
+      "src/assets/images/movie_covers/51HUrY93cwL._AC_UF1000,1000_QL80__jpg.png",
+  },
+  {
+    id: 10,
+    title: "Avengers: Endgame",
+    playtime: "3h 2m",
+    year: "2019",
+    cover: "src/assets/images/movie_covers/91-UCbbhoiL_jpg.png",
+  },
+  {
+    id: 11,
+    title: "Cover",
+    playtime: "2h 10m",
+    year: "2021",
+    cover:
+      "src/assets/images/movie_covers/bcc68be4-eede-409b-a63d-e179b28d19b4_jpg.png",
+  },
+  {
+    id: 12,
+    title: "Black Panther",
+    playtime: "2h 15m",
+    year: "2018",
+    cover: "src/assets/images/movie_covers/images.png",
+  },
+  {
+    id: 13,
+    title: "Iron Man 2",
+    playtime: "2h 4m",
+    year: "2010",
+    cover: "src/assets/images/movie_covers/iron_man_two_ver6_jpg.png",
+  },
+  {
+    id: 14,
+    title: "Guardians of the Galaxy",
+    playtime: "2h 1m",
+    year: "2014",
+    cover:
+      "src/assets/images/movie_covers/marvel-guardians-of-the-galaxy-61x91.5cm-movie-poster-37728-1-p_jpg.png",
+  },
+  {
+    id: 15,
+    title: "Lorem Ipsum",
+    playtime: "1h 30m",
+    year: "2021",
+    cover:
+      "src/assets/images/movie_covers/movie-poster-design-template_841014-16988_jpg.png",
+  },
+  {
+    id: 16,
+    title: "Smile",
+    playtime: "1h 45m",
+    year: "2021",
+    cover: "src/assets/images/movie_covers/s-l400_jpg.png",
+  },
+]);
+const SearchQuery = ref("");
 const filteredMovies = computed(() => {
-  return movies.value.filter(movie => movie.title.toLowerCase().includes(SearchQuery.value.toLowerCase()))
-})
+  return movies.value.filter((movie) =>
+    movie.title.toLowerCase().includes(SearchQuery.value.toLowerCase())
+  );
+});
 </script>
 
 <template>
   <div id="action-bar">
-    <button id="add-button"><img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus">Add Movie</button>
+    <button id="add-button">
+      <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />Add
+      Movie
+    </button>
     <div id="search-bar-container">
-      <img src="@/assets/images/icons/SearchIcon.svg" id="search-icon"/>
-      <input type="text" id="search-bar" placeholder="Search for a movie..." v-model="SearchQuery"/>
+      <img src="@/assets/images/icons/SearchIcon.svg" id="search-icon" />
+      <input
+        type="text"
+        id="search-bar"
+        placeholder="Search for a movie..."
+        v-model="SearchQuery"
+      />
     </div>
+    <button id="add-button">Login</button>
   </div>
   <div id="movie-grid" v-if="filteredMovies.length > 0">
-    <MovieCard v-for="movie in filteredMovies" :movie="movie"/>
+    <MovieCard v-for="movie in filteredMovies" :movie="movie" />
   </div>
   <div v-else>
     <h1>No movies containing "{{ SearchQuery }}" found</h1>
@@ -100,8 +215,10 @@ const filteredMovies = computed(() => {
 
 #movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); /* Responsive columns */
   gap: 16px;
 }
-
 </style>
