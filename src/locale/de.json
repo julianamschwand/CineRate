@@ -1,0 +1,6 @@
+{
+    "addMovie": "Film hinzufügen",
+    "searchPlaceholder": "Suche nach einem Film...",
+    "login": "Anmelden",
+    "noMoviesFound": "Keine Filme mit '{{ SearchQuery }}' gefunden"
+  }

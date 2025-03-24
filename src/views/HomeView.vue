@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
+import { useI18n } from "vue-i18n";
+
+const { locale, t } = useI18n(); 
 
 const movies = ref([
   {
@@ -124,6 +127,8 @@ const movies = ref([
     cover: "src/assets/images/movie_covers/s-l400_jpg.png",
   },
 ]);
+
+
 const SearchQuery = ref("");
 const filteredMovies = computed(() => {
   return movies.value.filter((movie) =>
@@ -135,25 +140,25 @@ const filteredMovies = computed(() => {
 <template>
   <div id="action-bar">
     <button id="add-button">
-      <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />Add
-      Movie
+      <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />
+      {{ t("addMovie") }}
     </button>
     <div id="search-bar-container">
       <img src="@/assets/images/icons/SearchIcon.svg" id="search-icon" />
       <input
         type="text"
         id="search-bar"
-        placeholder="Search for a movie..."
+        :placeholder="t('searchPlaceholder')"
         v-model="SearchQuery"
       />
     </div>
-    <button id="add-button">Login</button>
+    <button id="add-button">{{ t("login") }}</button>
   </div>
   <div id="movie-grid" v-if="filteredMovies.length > 0">
     <MovieCard v-for="movie in filteredMovies" :movie="movie" />
   </div>
   <div v-else>
-    <h1>No movies containing "{{ SearchQuery }}" found</h1>
+    <h1>{{ t("noMoviesFound", { SearchQuery }) }}</h1>
   </div>
 </template>
 

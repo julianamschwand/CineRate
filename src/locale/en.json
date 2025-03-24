@@ -1,0 +1,6 @@
+{
+    "addMovie": "Add Movie",
+    "searchPlaceholder": "Search for a movie...",
+    "login": "Login",
+    "noMoviesFound": "No movies containing '{{ SearchQuery }}' found"
+  }

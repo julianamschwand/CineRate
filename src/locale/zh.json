@@ -1,0 +1,6 @@
+{
+    "addMovie": "添加电影",
+    "searchPlaceholder": "搜索电影...",
+    "login": "登录",
+    "noMoviesFound": "未找到包含“{{ SearchQuery }}”的电影"
+  }
