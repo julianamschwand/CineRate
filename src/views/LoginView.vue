@@ -4,6 +4,16 @@
       <h1>Login</h1>
       <form @submit.prevent="handleLogin">
         <div class="form-group">
+          <label for="Username">Username:</label>
+          <input
+            type="username"
+            id="username"
+            v-model="username"
+            required
+            placeholder="Enter your username"
+          />
+        </div>
+        <div class="form-group">
           <label for="email">Email:</label>
           <input
             type="email"
@@ -46,17 +56,8 @@ export default {
   },
 };
 </script>
-<style>
-
-</style>
+<style></style>
 <style scoped>
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
 .container {
   display: flex;
   justify-content: center;

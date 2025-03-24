@@ -180,8 +180,20 @@ function toggleLogin() {
     <h1>No movies containing "{{ SearchQuery }}" found</h1>
   </div>
 </template>
-
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+</style>
 <style scoped>
+html,
+body {
+  margin: 8px;
+}
 #add-button {
   background-color: #8ac379;
   border: none;
