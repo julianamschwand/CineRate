@@ -7,7 +7,7 @@ const props = defineProps(['movie'])
 </script>
 
 <template>
-    <div id="movie-card" @click="router.push(`/watch/${movie.id}`)">
+    <div id="movie-card" @click="router.push(`/movie/${movie.id}`)">
       <img :src="movie.cover" id="movie-cover" />
       <div id="movie-info">
         <div id="movie-details">
