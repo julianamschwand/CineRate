@@ -1,7 +1,20 @@
+<script setup>
+import { ref } from "vue";
+
+const newComment = ref("");
+const comments = ref([]);
+
+function handleCommentSubmit() {
+  if (newComment.value.trim()) {
+    comments.value.push({ username: "User", text: newComment.value });
+    newComment.value = "";
+  }
+}
+</script>
 <template>
   <div class="movie-view">
     <div class="movie-header">
-      <h1 class="titel">movie</h1>
+      <h1 class="titel"></h1>
       <div class="rating-section">
         <div class="rate">
           <input type="radio" id="star5" name="rate" value="5" />
@@ -49,36 +62,14 @@
       <textarea
         v-model="newComment"
         placeholder="Add a comment"
-        :disabled="!isLoggedIn"
+        :disabled="isLoggedIn"
       ></textarea>
-      <button @click="handleCommentSubmit" :disabled="!isLoggedIn">
+      <button @click="handleCommentSubmit" :disabled="isLoggedIn">
         Submit
       </button>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      comments: [],
-      newComment: "",
-    };
-  },
-  methods: {
-    handleCommentSubmit() {
-      alert("Please log in to add a comment.");
-    },
-    addComment() {
-      if (this.newComment.trim()) {
-        this.comments.push(this.newComment.trim());
-        this.newComment = "";
-      }
-    },
-  },
-};
-</script>
 
 <style scoped>
 .rate {
@@ -97,7 +88,7 @@ export default {
   white-space: nowrap;
   cursor: pointer;
   font-size: 30px;
-  color: #ccc;
+  color: #282c34;
 }
 .rate:not(:checked) > label:before {
   content: "★ ";
@@ -134,6 +125,10 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 80%;
+  background-color: #8ac379;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 .rating-section {
   display: flex;
@@ -142,7 +137,6 @@ export default {
 }
 .movie-container {
   display: flex;
-  justify-content: space-between;
   width: 80%;
   margin-top: 20px;
 }
@@ -152,9 +146,10 @@ export default {
   background-color: #8ac379;
   border-radius: 10px;
   overflow: hidden;
+  margin-right: 20px;
 }
 .movie-details {
-  width: 60%;
+  width: 80%;
   padding: 20px;
   background-color: #8ac379;
   border-radius: 10px;
@@ -162,30 +157,67 @@ export default {
 
 .comments-section {
   width: 80%;
+  display: flex;
+  flex-direction: column;
   margin-top: 20px;
+  background-color: #282c34;
+  padding: 20px;
+  border-radius: 10px;
 }
+
 .comments-section h3 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  color: #333;
 }
+
 .comments-section ul {
   list-style-type: none;
   padding: 0;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
-.comments-section textarea {
-  width: 100%;
-  height: 80px;
+
+.comments-section li {
+  background-color: white;
+  padding: 10px 15px;
   margin-bottom: 10px;
   border-radius: 5px;
-  padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #282c34;
 }
+
+.comments-section li strong {
+  color: #8ac379;
+}
+
+.comment-input-container {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.comments-section textarea {
+  flex: 1;
+  height: 80px;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #282c34;
+  resize: vertical;
+  font-family: inherit;
+}
+
 .comments-section button {
   background-color: #8ac379;
   color: white;
   border: none;
-  padding: 10px 20px;
+  width: 10%;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.2s;
+  height: 80px;
+}
+
+.comments-section button:hover {
+  background-color: #76a968;
 }
 </style>

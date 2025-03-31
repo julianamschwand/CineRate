@@ -1,16 +1,18 @@
-<script setup>
-import { useRouter } from "vue-router";
-const router = useRouter();
-
-const RouteToRegister = () => {
-  router.push("/register");
-};
-</script>
 <template>
   <div class="container">
-    <div class="login-view">
-      <h1>Login</h1>
-      <form @submit.prevent="handleLogin">
+    <div class="register-view">
+      <h1>Register</h1>
+      <form @submit.prevent="handleregister">
+        <div class="form-group">
+          <label for="Username">Username:</label>
+          <input
+            type="username"
+            id="username"
+            v-model="username"
+            required
+            placeholder="Enter your username"
+          />
+        </div>
         <div class="form-group">
           <label for="email">Email:</label>
           <input
@@ -31,13 +33,30 @@ const RouteToRegister = () => {
             placeholder="Enter your password"
           />
         </div>
-        <button id="LoginButton" type="submit">Login</button>
-        <button id="RegisterButton" @click="RouteToRegister">Register</button>
+        <button type="submit">register</button>
       </form>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+  name: "registerView",
+  data() {
+    return {
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    handleregister() {
+      console.log("Email:", this.email);
+      console.log("Password:", this.password);
+    },
+  },
+};
+</script>
+<style></style>
 <style scoped>
 .container {
   display: flex;
@@ -46,7 +65,7 @@ const RouteToRegister = () => {
   height: 100vh;
 }
 
-.login-view {
+.register-view {
   width: 100%;
   max-width: 400px;
   background-color: #8ac379;
@@ -84,30 +103,18 @@ input {
   box-sizing: border-box;
 }
 
-#LoginButton {
+button {
   width: 100%;
   padding: 10px;
-  background-color: #282c34;
-  color: #8ac379;
+  background-color: #007bff;
+  color: white;
   font-size: 1rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-#RegisterButton {
-  width: 100%;
-  padding: 10px;
-  background-color: #8ac379;
-  color: #282c34;
-  font-size: 1rem;
-  border: 4px solid #282c34;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
 button:hover {
-  filter: brightness(1.1);
+  background-color: #0056b3;
 }
 </style>

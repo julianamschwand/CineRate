@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
-
 const movies = ref([
   {
     id: 1,
@@ -131,12 +130,18 @@ const filteredMovies = computed(() => {
   );
 });
 const isLoggedIn = ref(false);
-
 function toggleLogin() {
   if (!isLoggedIn.value) {
     window.location.href = "/login";
   } else {
     isLoggedIn.value = false;
+  }
+}
+function register() {
+  if (!register.value) {
+    window.location.href = "/register";
+  } else {
+    register.value = false;
   }
 }
 </script>
@@ -171,6 +176,9 @@ function toggleLogin() {
       <button id="login-button" @click="toggleLogin">
         {{ isLoggedIn ? "Logout" : "Login" }}
       </button>
+      <button v-if="!isLoggedIn" id="register-button" @click="register">
+        Register
+      </button>
     </div>
   </div>
   <div id="movie-grid" v-if="filteredMovies.length > 0">
@@ -180,15 +188,7 @@ function toggleLogin() {
     <h1>No movies containing "{{ SearchQuery }}" found</h1>
   </div>
 </template>
-<style>
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-</style>
+
 <style scoped>
 html,
 body {
@@ -259,7 +259,8 @@ body {
   align-items: center;
 }
 
-#login-button {
+#login-button,
+#register-button {
   background-color: #8ac379;
   border: none;
   border-radius: 10px;
@@ -273,8 +274,11 @@ body {
   justify-content: center;
   transition: background-color 0.3s ease;
 }
-
-#login-button:hover {
+#register-button {
+  margin-left: 10px;
+}
+#login-button:hover,
+#register-button:hover {
   background-color: #8ac379;
 }
 
