@@ -164,10 +164,9 @@ function handleCommentSubmit() {
   padding: 20px;
   border-radius: 10px;
 }
-
 .comments-section h3 {
   margin-bottom: 15px;
-  color: #333;
+  color: white;
 }
 
 .comments-section ul {
@@ -210,11 +209,13 @@ function handleCommentSubmit() {
   color: white;
   border: none;
   width: 10%;
+  height: 10%;
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s;
-  height: 80px;
+  height: 50px;
+  margin-top: 10px;
 }
 
 .comments-section button:hover {
