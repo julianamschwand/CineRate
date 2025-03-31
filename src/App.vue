@@ -9,17 +9,6 @@ const { locale, t } = useI18n(); // Access the translation function
 
 <template>
   <RouterView />
-  <div id="app">
-    <h1>{{ t('welcome') }}</h1>
-    <p>{{ t('description') }}</p>
-    <select v-model="locale" @change="changeLanguage">
-      <option value="en">English</option>
-      <option value="de">German</option>
-      <option value="it">Italian</option>
-      <option value="es">Spanish</option>
-      <option value="zh">Mandarin</option>
-    </select>
-  </div>
 </template>
 
 <script>
