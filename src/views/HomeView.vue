@@ -127,57 +127,89 @@ const movies = ref([
     cover: "src/assets/images/movie_covers/s-l400_jpg.png",
   },
 ]);
-
-
 const SearchQuery = ref("");
 const filteredMovies = computed(() => {
   return movies.value.filter((movie) =>
     movie.title.toLowerCase().includes(SearchQuery.value.toLowerCase())
   );
 });
-</script>
+const isLoggedIn = ref(false);
 
+function toggleLogin() {
+  if (!isLoggedIn.value) {
+    window.location.href = "/login";
+  } else {
+    isLoggedIn.value = false;
+  }
+}
+</script>
 <template>
   <div id="action-bar">
-    <button id="add-button">
+    <button id="add-button" @click="addMovie">
       <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />
-      {{ t("addMovie") }}
+      Add Movie
     </button>
     <div id="search-bar-container">
       <img src="@/assets/images/icons/SearchIcon.svg" id="search-icon" />
       <input
         type="text"
         id="search-bar"
-        :placeholder="t('searchPlaceholder')"
+        placeholder="Search for a movie..."
         v-model="SearchQuery"
       />
     </div>
-    <button id="add-button">{{ t("login") }}</button>
+    <div id="button-group">
+      <div id="globe-dropdown-container">
+        <button id="globe-button" @click="toggleDropdown">
+          <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
+        </button>
+        <div v-if="isDropdownVisible" id="globe-dropdown">
+          <ul>
+            <li><a href="/en">English</a></li>
+            <li><a href="/de">Deutsch</a></li>
+            <li><a href="/sp">EspaÃ±ol</a></li>
+          </ul>
+        </div>
+      </div>
+      <button id="login-button" @click="toggleLogin">
+        {{ isLoggedIn ? "Logout" : "Login" }}
+      </button>
+    </div>
   </div>
   <div id="movie-grid" v-if="filteredMovies.length > 0">
     <MovieCard v-for="movie in filteredMovies" :movie="movie" />
   </div>
   <div v-else>
-    <h1>{{ t("noMoviesFound", { SearchQuery }) }}</h1>
+    <h1>No movies containing "{{ SearchQuery }}" found</h1>
   </div>
 </template>
-
+<style>
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+</style>
 <style scoped>
+html,
+body {
+  margin: 8px;
+}
 #add-button {
   background-color: #8ac379;
   border: none;
   border-radius: 10px;
   padding: 8px;
+  width: 130px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   color: #20242a;
   height: 50px;
   font-weight: bold;
-}
-
-#add-button:active {
-  background-color: #6f9e3f;
 }
 
 #add-button-plus {
@@ -193,6 +225,7 @@ const filteredMovies = computed(() => {
 
 #search-bar {
   padding: 10px;
+  padding-right: 20svb;
   border: 1px solid #282c34;
   border-radius: 5px;
   display: inline-block;
@@ -220,10 +253,49 @@ const filteredMovies = computed(() => {
 
 #movie-grid {
   display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(200px, 1fr)
-  ); /* Responsive columns */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
+}
+
+#button-group {
+  display: flex;
+  align-items: center;
+}
+
+#login-button {
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+#login-button:hover {
+  background-color: #8ac379;
+}
+
+#globe-button {
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  margin-right: 10px;
+}
+
+#globe-icon {
+  width: 25px;
+  height: 25px;
 }
 </style>
