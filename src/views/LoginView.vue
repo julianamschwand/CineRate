@@ -41,6 +41,7 @@ const RouteToRegister = () => {
 <style scoped>
 .container {
   display: flex;
+  overflow: hidden;
   justify-content: center;
   align-items: center;
   height: 100vh;

@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { useI18n } from "vue-i18n";
 
-const { locale, t } = useI18n(); 
+const { locale, t } = useI18n();
 
 const movies = ref([
   {
@@ -152,20 +152,13 @@ function changeLanguage(lang) {
   locale.value = lang;
   isDropdownVisible.value = false; // Hide the dropdown after selection
 }
-function register() {
-  if (!register.value) {
-    window.location.href = "/register";
-  } else {
-    register.value = false;
-  }
-}
 
 </script>
 <template>
   <div id="action-bar">
-    <button id="add-button" @click="addMovie">
+    <button v-if="isadmin"id="add-button" @click="addMovie">
       <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />
-      {{ t('buttons.addMovie') }}
+      {{ t("buttons.addMovie") }}
     </button>
     <div id="search-bar-container">
       <img src="@/assets/images/icons/SearchIcon.svg" id="search-icon" />
@@ -182,19 +175,28 @@ function register() {
           <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
         </button>
         <div v-if="isDropdownVisible" id="globe-dropdown">
-          <div class="dropdown-option" @click="changeLanguage('en')">English 🇬🇧</div>
-          <div class="dropdown-option" @click="changeLanguage('de')">Deutsch 🇩🇪</div>
-          <div class="dropdown-option" @click="changeLanguage('it')">Italiano 🇮🇹</div>
-          <div class="dropdown-option" @click="changeLanguage('sp')">Español 🇪🇸</div>
-          <div class="dropdown-option" @click="changeLanguage('zh')">普通話 🇨🇳</div>
-          <div class="dropdown-option" @click="changeLanguage('fi')">Suomalainen 🇫🇮</div>
+          <div class="dropdown-option" @click="changeLanguage('en')">
+            English 🇬🇧
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('de')">
+            Deutsch 🇩🇪
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('it')">
+            Italiano 🇮🇹
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('sp')">
+            Español 🇪🇸
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('zh')">
+            普通話 🇨🇳
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('fi')">
+            Suomalainen 🇫🇮
+          </div>
         </div>
       </div>
       <button id="login-button" @click="toggleLogin">
-        {{ isLoggedIn ? t('buttons.logout') : t('buttons.login') }}
-      </button>
-      <button v-if="!isLoggedIn" id="register-button" @click="register">
-        Register
+        {{ isLoggedIn ? t("buttons.logout") : t("buttons.login") }}
       </button>
     </div>
   </div>
@@ -206,18 +208,9 @@ function register() {
     />
   </div>
   <div v-else>
-    <h1>{{ t('nmc.nmc0') }} "{{ SearchQuery }}" {{ t('nmc.found') }}</h1>
+    <h1>{{ t("nmc.nmc0") }} "{{ SearchQuery }}" {{ t("nmc.found") }}</h1>
   </div>
 </template>
-<style>
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-</style>
 <style scoped>
 html,
 body {
@@ -288,8 +281,7 @@ body {
   align-items: center;
 }
 
-#login-button,
-#register-button {
+#login-button {
   background-color: #8ac379;
   border: none;
   border-radius: 10px;
@@ -330,16 +322,10 @@ body {
   cursor: pointer;
   color: #20242a;
   font-size: 14px;
-  gap:0px;
+  gap: 0px;
 }
 
-.dropdown-option:hover {}
-
-#register-button {
-  margin-left: 10px;
-}
-#login-button:hover,
-#register-button:hover {
+#login-button:hover {
   background-color: #8ac379;
 }
 
@@ -362,6 +348,6 @@ body {
 }
 
 div h1 {
-  color:white;
+  color: white;
 }
 </style>

@@ -33,7 +33,7 @@
             placeholder="Enter your password"
           />
         </div>
-        <button type="submit">register</button>
+        <button type="submit">Register</button>
       </form>
     </div>
   </div>
@@ -106,7 +106,7 @@ input {
 button {
   width: 100%;
   padding: 10px;
-  background-color: #007bff;
+  background-color: #282c34;
   color: white;
   font-size: 1rem;
   border: none;
@@ -115,6 +115,6 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #282c34;
 }
 </style>

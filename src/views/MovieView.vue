@@ -2,19 +2,59 @@
 import { ref } from "vue";
 
 const newComment = ref("");
-const comments = ref([]);
+const comments = ref([
+  {
+    CommentId: 1,
+    Content: "Das isch dr best Film wo ich je gseh ha!",
+    fk_UserDataId: 1,
+    fk_MovieId: 1,
+    username: "Luca",
+  },
+  {
+    CommentId: 2,
+    Content: "Ganz okay, aber d’Story het chli lahm gfange.",
+    fk_UserDataId: 2,
+    fk_MovieId: 1,
+    username: "Mira",
+  },
+  {
+    CommentId: 3,
+    Content: "Soundtrack 10/10, würd no mal luege!",
+    fk_UserDataId: 3,
+    fk_MovieId: 1,
+    username: "Kevin",
+  },
+  {
+    CommentId: 4,
+    Content: "Mega Kamerafüehrig, aber dä Schluss het mi enttäuscht.",
+    fk_UserDataId: 4,
+    fk_MovieId: 1,
+    username: "Sandra",
+  },
+  {
+    CommentId: 5,
+    Content: "Wägem Hauptcharakter han ich fast abgstellt 😅",
+    fk_UserDataId: 5,
+    fk_MovieId: 1,
+    username: "Joel",
+  },
+]);
 
 function handleCommentSubmit() {
   if (newComment.value.trim()) {
-    comments.value.push({ username: "User", text: newComment.value });
+    comments.value.push({ username: username, text: newComment.value });
     newComment.value = "";
   }
+}
+function deleteComment(CommentId) {
+  console.log("Deleting comment with CommentId:", CommentId);
+  comments.value = comments.value.filter((_, i) => i !== CommentId);
 }
 </script>
 <template>
   <div class="movie-view">
     <div class="movie-header">
-      <h1 class="titel"></h1>
+      <h1 class="titel">titel</h1>
       <div class="rating-section">
         <div class="rate">
           <input type="radio" id="star5" name="rate" value="5" />
@@ -55,16 +95,35 @@ function handleCommentSubmit() {
     <div class="comments-section">
       <h3>Comments</h3>
       <ul>
-        <li v-for="(comment, index) in comments" :key="index">
-          <strong>{{ comment.username }}:</strong> {{ comment.text }}
+        <li v-for="(comment, CommentId) in comments" :key="CommentId">
+          <div class="creativeclassname">
+            <strong>{{ comment.username }}:</strong>
+            <button
+              v-if="!isadmin || comment.username == username"
+              @click="deleteComment(CommentId)"
+              class="delete-comment-button"
+            >
+              <img
+                class="delete-comment-icon"
+                src="@/assets/images/icons/delete-button.svg"
+                alt="Delete Comment"
+              />
+            </button>
+          </div>
+          <div class="comment">{{ comment.Content }}</div>
         </li>
       </ul>
+
       <textarea
         v-model="newComment"
         placeholder="Add a comment"
-        :disabled="isLoggedIn"
+        :disabled="!isLoggedIn"
       ></textarea>
-      <button @click="handleCommentSubmit" :disabled="isLoggedIn">
+      <button
+        @click="handleCommentSubmit"
+        :disabled="isLoggedIn"
+        class="submit-button"
+      >
         Submit
       </button>
     </div>
@@ -72,6 +131,27 @@ function handleCommentSubmit() {
 </template>
 
 <style scoped>
+.movie-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.movie-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #8ac379;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
 .rate {
   float: left;
   height: 46px;
@@ -115,21 +195,6 @@ function handleCommentSubmit() {
   width: 130px;
   cursor: pointer;
 }
-.movie-view {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.movie-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 80%;
-  background-color: #8ac379;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
 .rating-section {
   display: flex;
   align-items: center;
@@ -137,54 +202,62 @@ function handleCommentSubmit() {
 }
 .movie-container {
   display: flex;
-  width: 80%;
+  width: 100%;
   margin-top: 20px;
 }
 .movie-poster {
   width: 300px;
   height: 450px;
-  background-color: #8ac379;
+  background-color: #20242a;
   border-radius: 10px;
   overflow: hidden;
   margin-right: 20px;
 }
 .movie-details {
-  width: 80%;
+  width: 100%;
   padding: 20px;
-  background-color: #8ac379;
+  background-color: #20242a;
   border-radius: 10px;
 }
 
 .comments-section {
-  width: 80%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   margin-top: 20px;
-  background-color: #282c34;
-  padding: 20px;
+  background-color: #20242a;
+  padding: 10px;
   border-radius: 10px;
+  box-sizing: border-box;
 }
 .comments-section h3 {
   margin-bottom: 15px;
   color: white;
 }
-
 .comments-section ul {
   list-style-type: none;
-  padding: 0;
+  padding: 10px;
   margin-bottom: 15px;
 }
-
-.comments-section li {
-  background-color: white;
+li {
+  padding-bottom: 50px;
+}
+img.delete-comment-icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.comment {
+  background-color: #20242a;
   padding: 10px 15px;
   margin-bottom: 10px;
+  color: white;
   border-radius: 5px;
-  border: 1px solid #282c34;
+  border: 1px solid #8ac379;
 }
 
 .comments-section li strong {
-  color: #8ac379;
+  color: white;
 }
 
 .comment-input-container {
@@ -204,7 +277,7 @@ function handleCommentSubmit() {
   font-family: inherit;
 }
 
-.comments-section button {
+.submit-button {
   background-color: #8ac379;
   color: white;
   border: none;
@@ -217,8 +290,26 @@ function handleCommentSubmit() {
   height: 50px;
   margin-top: 10px;
 }
-
-.comments-section button:hover {
+.comment-section img {
+  width: 20px;
+  height: 20px;
+}
+.submit-button:hover {
   background-color: #76a968;
+}
+.delete-comment-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.delete-comment-button:hover {
+  background-color: red;
+}
+.creativeclassname {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 </style>
