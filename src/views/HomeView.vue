@@ -152,13 +152,6 @@ function changeLanguage(lang) {
   locale.value = lang;
   isDropdownVisible.value = false; // Hide the dropdown after selection
 }
-function register() {
-  if (!register.value) {
-    window.location.href = "/register";
-  } else {
-    register.value = false;
-  }
-}
 
 </script>
 <template>
@@ -193,9 +186,7 @@ function register() {
       <button id="login-button" @click="toggleLogin">
         {{ isLoggedIn ? t('buttons.logout') : t('buttons.login') }}
       </button>
-      <button v-if="!isLoggedIn" id="register-button" @click="register">
-        Register
-      </button>
+
     </div>
   </div>
   <div id="movie-grid" v-if="filteredMovies.length > 0">
@@ -333,7 +324,6 @@ body {
   gap:0px;
 }
 
-.dropdown-option:hover {}
 
 #register-button {
   margin-left: 10px;
