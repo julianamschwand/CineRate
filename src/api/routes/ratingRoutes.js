@@ -13,7 +13,7 @@ export async function getrating(movieid) {
 
 export async function rate(movieid, rating) {
 	try {
-		const res = await api.get("/rate", {
+		const res = await api.post("/rate", {
       movieid,
       rating
 		})
