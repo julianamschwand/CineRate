@@ -2,7 +2,7 @@ import api from "../api.js"
 
 export async function userdata() {
   try {
-		const res = await axios.get("/userdata")
+		const res = await api.get("/userdata")
 		return res.data
   } catch (error) {
 		console.error("Error:", error)
@@ -11,7 +11,7 @@ export async function userdata() {
 
 export async function register(username, email, password) {
 	try {
-		const res = await axios.post("/register", {
+		const res = await api.post("/register", {
 			username,
 			email,
 			password
@@ -24,7 +24,7 @@ export async function register(username, email, password) {
 
 export async function login(email, password) {
   try {
-		const res = await axios.get("/login", {
+		const res = await api.get("/login", {
 			email,
 			password
 		})
@@ -36,7 +36,7 @@ export async function login(email, password) {
 
 export async function logout() {
 	try {
-		const res = await axios.post("/logout")
+		const res = await api.post("/logout")
 		return res.data
 	} catch (error) {
 		console.error("Error:", error)
@@ -45,7 +45,7 @@ export async function logout() {
 
 export async function rolemod(userdataid) {
 	try {
-		const res = await axios.post("/rolemod", {
+		const res = await api.post("/rolemod", {
 			userdataid
 		})
 		return res.data
@@ -56,7 +56,7 @@ export async function rolemod(userdataid) {
 
 export async function roleadmin(userdataid) {
 	try {
-		const res = await axios.post("/roleadmin", {
+		const res = await api.post("/roleadmin", {
 			userdataid
 		})
 		return res.data
@@ -67,7 +67,7 @@ export async function roleadmin(userdataid) {
 
 export async function roleuser(userdataid) {
 	try {
-		const res = await axios.post("/roleuser", {
+		const res = await api.post("/roleuser", {
 			userdataid
 		})
 		return res.data
@@ -76,9 +76,9 @@ export async function roleuser(userdataid) {
 	}
 }
 
-export async function edituser(username, email, password) {
+export async function edituser(username = null, email = null, password = null) {
 	try {
-		const res = await axios.post("/edituser", {
+		const res = await api.patch("/edituser", {
 			username,
 			email,
 			password
@@ -91,7 +91,7 @@ export async function edituser(username, email, password) {
 
 export async function deleteuser(userdataid) {
 	try {
-		const res = await axios.post("/deleteuser", {
+		const res = await api.delete("/deleteuser", {
 			userdataid
 		})
 		return res.data
