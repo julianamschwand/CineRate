@@ -1,16 +1,33 @@
 <script setup>
-import { useRouter } from "vue-router";
+import { ref } from "vue"
+import { useRouter } from "vue-router"
+import { login } from "../api/routes/userRoutes"
+
 const router = useRouter();
+const email = ref("");
+const password = ref("");
+
 
 const RouteToRegister = () => {
   router.push("/register");
 };
+
+const HandleLogin = () => {
+  try {
+    const res = login(email.value, password.value)
+    if (res.success) {
+      router.push("/home")
+    }
+  } catch (error) {
+    console.error("Login failed:", error);
+  }
+}
 </script>
 <template>
   <div class="container">
     <div class="login-view">
       <h1>Login</h1>
-      <form @submit.prevent="handleLogin">
+      <form @submit.prevent="HandleLogin">
         <div class="form-group">
           <label for="email">Email:</label>
           <input
