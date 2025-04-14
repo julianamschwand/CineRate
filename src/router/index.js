@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import MovieView from "../views/MovieView.vue";
 import RegisterView from "../views/RegisterView.vue";
+import AddMovieView from "../views/AddMovieView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -25,6 +26,11 @@ const router = createRouter({
       path: "/register",
       name: "resgister",
       component: RegisterView,
+    },
+    {
+      path: "/addmovie",
+      name: "addmovie",
+      component: AddMovieView,
     },
   ],
 });

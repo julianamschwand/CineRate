@@ -22,24 +22,18 @@ const changeLanguage = (lang) => {
   locale.value = lang;
   toggleDropdown();
 };
-
-const RouteToRegister = () => {
-  router.push("/register");
-};
 </script>
 
 <template>
-  <div class="container">
-    <div class="login-view">
-      <div class="back-button">
-        <button class="backbutton" id="backbutton">
-          <img
-            src="@/assets/images/icons/BackIcon.svg"
-            id="back-icon"
-            @click="$router.push('/')"
-          />
-        </button>
-      </div>
+  <div class="Addmovie-container">
+    <div class="back-button">
+      <button class="backbutton" id="backbutton">
+        <img
+          src="@/assets/images/icons/BackIcon.svg"
+          id="back-icon"
+          @click="$router.push('/')"
+        />
+      </button>
       <div id="globe-dropdown-container">
         <div></div>
         <button :class="globeclasses" @click="toggleDropdown">
@@ -66,37 +60,17 @@ const RouteToRegister = () => {
           </div>
         </div>
       </div>
-      <h1>{{ t("buttons.login") }}</h1>
-      <form @submit.prevent="handleLogin">
-        <div class="form-group">
-          <label for="email">{{ t("words.email") }}</label>
-          <input
-            type="email"
-            id="email"
-            required
-            :placeholder="t('buttons.emailPlaceholder')"
-            v-model="email"
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">{{ t("words.password") }}</label>
-          <input
-            type="password"
-            id="password"
-            required
-            :placeholder="t('buttons.passwordPlaceholder')"
-            v-model="password"
-          />
-        </div>
-        <button id="LoginButton" type="submit">{{ t("buttons.login") }}</button>
-        <button id="RegisterButton" @click="RouteToRegister">
-          {{ t("buttons.register") }}
-        </button>
-      </form>
+    </div>
+    <div class="contentcontainer">
+      <ul>
+        <li>Titel</li>
+        <li>Beschreibung</li>
+        <li>playbackID</li>
+        <li>Poster</li>
+      </ul>
     </div>
   </div>
 </template>
-
 <style scoped>
 #globe-dropdown-container {
   position: absolute;
@@ -157,78 +131,39 @@ const RouteToRegister = () => {
 .dropdown-option:hover {
   background-color: #7ab06b;
 }
-
-.container {
+.contentcontainer {
   display: flex;
-  overflow: hidden;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.login-view {
+  justify-content: left;
+  align-items: left;
+  flex-direction: column;
   width: 100%;
-  max-width: 400px;
-  background-color: #8ac379;
-  margin: 0 auto;
+  height: 100%;
+  background-color: #20242a;
+  padding: 10%;
+}
+.contentcontainer ul {
+  list-style-type: none;
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 600;
-  font-size: 1rem;
-  color: black;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #333;
-  border-radius: 4px;
-  background-color: #333;
-  box-sizing: border-box;
-  color: white;
-}
-
-#LoginButton {
-  width: 100%;
-  padding: 10px;
   background-color: #282c34;
-  color: #8ac379;
-  font-size: 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 10px;
 }
-
-#RegisterButton {
-  width: 100%;
-  padding: 10px;
+.contentcontainer li {
   background-color: #8ac379;
-  color: #282c34;
-  font-size: 1rem;
-  border: 4px solid #282c34;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
+  border-radius: 10px;
+  padding: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  transition: background-color 0.3s ease;
 }
-
+.Addmovie-container {
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  height: 100vh;
+  background-color: #28232c;
+}
 #back-icon {
   width: 25px;
   height: 25px;

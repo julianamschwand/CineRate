@@ -1,23 +1,44 @@
 <template>
   <div class="container">
     <div class="register-view">
+      <div class="back-button">
+        <button class="backbutton" id="backbutton">
+          <img
+            src="@/assets/images/icons/BackIcon.svg"
+            id="back-icon"
+            @click="$router.push('/')"
+          />
+        </button>
+      </div>
       <div id="globe-dropdown-container">
         <button id="globe-button" @click="toggleDropdown">
           <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
         </button>
         <div v-if="isDropdownVisible" id="globe-dropdown">
-          <div class="dropdown-option" @click="changeLanguage('en')">English 🇬🇧</div>
-          <div class="dropdown-option" @click="changeLanguage('de')">Deutsch 🇩🇪</div>
-          <div class="dropdown-option" @click="changeLanguage('it')">Italiano 🇮🇹</div>
-          <div class="dropdown-option" @click="changeLanguage('sp')">Español 🇪🇸</div>
-          <div class="dropdown-option" @click="changeLanguage('zh')">普通話 🇨🇳</div>
-          <div class="dropdown-option" @click="changeLanguage('fi')">Suomalainen 🇫🇮</div>
+          <div class="dropdown-option" @click="changeLanguage('en')">
+            English 🇬🇧
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('de')">
+            Deutsch 🇩🇪
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('it')">
+            Italiano 🇮🇹
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('sp')">
+            Español 🇪🇸
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('zh')">
+            普通話 🇨🇳
+          </div>
+          <div class="dropdown-option" @click="changeLanguage('fi')">
+            Suomalainen 🇫🇮
+          </div>
         </div>
       </div>
-      <h1>{{ t('buttons.register') }}</h1>
+      <h1>{{ t("buttons.register") }}</h1>
       <form @submit.prevent="handleregister">
         <div class="form-group">
-          <label for="username">{{ t('words.username') }}</label>
+          <label for="username">{{ t("words.username") }}</label>
           <input
             type="text"
             id="username"
@@ -27,7 +48,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="email">{{ t('words.email') }}</label>
+          <label for="email">{{ t("words.email") }}</label>
           <input
             type="email"
             id="email"
@@ -37,7 +58,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="password">{{ t('words.password') }}</label>
+          <label for="password">{{ t("words.password") }}</label>
           <input
             type="password"
             id="password"
@@ -46,8 +67,12 @@
             :placeholder="t('buttons.passwordPlaceholder')"
           />
         </div>
-        <button id="RegisterButton" type="submit">{{ t('buttons.register') }}</button>
-        <button id="LoginButton" type="button" @click="RouteToLogin">{{ t('buttons.login') }}</button>
+        <button id="RegisterButton" type="submit">
+          {{ t("buttons.register") }}
+        </button>
+        <button id="LoginButton" type="button" @click="RouteToLogin">
+          {{ t("buttons.login") }}
+        </button>
       </form>
     </div>
   </div>
@@ -225,5 +250,20 @@ input {
 
 button:hover {
   background-color: #282c34;
+}
+#back-icon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+#backbutton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  height: 50px;
+  width: 50px;
 }
 </style>
