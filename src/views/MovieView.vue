@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-
 const newComment = ref("");
 const comments = ref([
   {
@@ -303,8 +302,9 @@ img.delete-comment-icon {
   cursor: pointer;
   padding: 0;
 }
+
 .delete-comment-button:hover {
-  background-color: red;
+  transform: scale(1.5); /* ADD TRASHCAN EFFECT TO OPEN LID LATER THO*/
 }
 .creativeclassname {
   display: flex;
