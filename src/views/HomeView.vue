@@ -196,8 +196,9 @@ function changeLanguage(lang) {
         </div>
       </div>
       <button id="login-button" @click="toggleLogin">
-        {{ isLoggedIn ? t("buttons.logout") : t("buttons.login") }}
+        {{ isLoggedIn ? t('buttons.logout') : t('buttons.login') }}
       </button>
+
     </div>
   </div>
   <div id="movie-grid" v-if="filteredMovies.length > 0">
