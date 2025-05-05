@@ -1,6 +1,5 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { login } from "../api/routes/userRoutes"
 import { ref } from "vue"

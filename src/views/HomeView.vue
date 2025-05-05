@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { useI18n } from "vue-i18n";
 import { userdata } from "../../src/api/routes/userRoutes.js";
+import { useRouter } from "vue-router"
 const { locale, t } = useI18n();
 
 const movies = ref([
@@ -137,6 +138,8 @@ const isDropdownVisible = ref(false);
 const isLoggedIn = ref(false);
 const isAdmin = ref(false);
 const isMod = ref(false);
+const router = useRouter();
+
 onMounted(async () => {
   try {
     const user = await userdata();
@@ -157,9 +160,11 @@ const toggleLogin = () => {
     isLoggedIn.value = false;
   }
 };
+
 const addMovie = () => {
-  router.push("/register");
+  router.push("/addmovie");
 };
+
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
 }

@@ -1,13 +1,15 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { getlanguages } from "@/api/routes/languageRoutes";
 
 const router = useRouter();
 const { locale, t } = useI18n();
 
 const isDropdownVisible = ref(false);
 const globeclasses = ref("globe-button");
+const languageList = ref([])
 
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
@@ -22,6 +24,20 @@ const changeLanguage = (lang) => {
   locale.value = lang;
   toggleDropdown();
 };
+
+const getLanguageList = async () => {
+  const res = await getlanguages()
+  
+  if (res.success) {
+    for (language in res.languages) {
+      languageList.value.push(language.LanguageName)
+    } 
+  }
+}
+
+onMounted(async () => {
+  getLanguageList()
+})
 </script>
 
 <template>
@@ -62,12 +78,10 @@ const changeLanguage = (lang) => {
       </div>
     </div>
     <div class="contentcontainer">
-      <ul>
-        <li>Titel</li>
-        <li>Beschreibung</li>
-        <li>playbackID</li>
-        <li>Poster</li>
-      </ul>
+      <div>Title</div>
+      <div>Description</div>
+      <div>PlaybackID</div>
+      <div>Poster</div>
     </div>
   </div>
 </template>
@@ -138,16 +152,15 @@ const changeLanguage = (lang) => {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: #20242a;
   padding: 10%;
 }
-.contentcontainer ul {
+.contentcontainer div {
   list-style-type: none;
   padding: 20px;
   background-color: #282c34;
   border-radius: 10px;
 }
-.contentcontainer li {
+.contentcontainer div {
   background-color: #8ac379;
   border-radius: 10px;
   padding: 8px;
@@ -162,7 +175,6 @@ const changeLanguage = (lang) => {
   justify-content: left;
   align-items: left;
   height: 100vh;
-  background-color: #28232c;
 }
 #back-icon {
   width: 25px;
