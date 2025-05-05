@@ -45,6 +45,16 @@ const messages = {
       login: "Login",
       logout: "Logout",
       searchPlaceholder: "Search for a movie...",
+      emailPlaceholder: "Enter your email",
+      passwordPlaceholder: "Enter your password",
+      usernamePlaceholder: "Enter your username",
+      register: "Register",
+    },
+    
+    words: {
+      email: "Email",
+      password: "Password",
+      username: "Username",
     },
   },
   de: {
@@ -63,6 +73,15 @@ const messages = {
       login: "Anmelden",
       logout: "Abmelden",
       searchPlaceholder: "Nach einem Film suchen...",
+      emailPlaceholder: "Geben Sie Ihre E-Mail ein",
+      passwordPlaceholder: "Geben Sie Ihr Passwort ein",
+      usernamePlaceholder: "Geben Sie Ihren Benutzernamen ein",
+      register: "Registrieren",
+    },
+    words: {
+      email: "E-Mail",
+      password: "Passwort",
+      username: "Benutzername",
     },
     nmc: {
       nmc0: "Keine Filme gefunden, die",
@@ -85,6 +104,15 @@ const messages = {
       login: "Accedi",
       logout: "Esci",
       searchPlaceholder: "Cerca un film...",
+      emailPlaceholder: "Inserisci la tua email",
+      passwordPlaceholder: "Inserisci la tua password",
+      usernamePlaceholder: "Inserisci il tuo nome utente",
+      register: "Registrati",
+    },
+    words: {
+      email: "Email",
+      password: "Password",
+      username: "Nome utente",
     },
     nmc: {
       nmc0: "Nessun film trovato che",
@@ -107,6 +135,15 @@ const messages = {
       login: "Iniciar sesión",
       logout: "Cerrar sesión",
       searchPlaceholder: "Buscar una película...",
+      emailPlaceholder: "Ingresa tu correo electrónico",
+      passwordPlaceholder: "Ingresa tu contraseña",
+      usernamePlaceholder: "Ingresa tu nombre de usuario",
+      register: "Registrarse",
+    },
+    words: {
+      email: "Correo electrónico",
+      password: "Contraseña",
+      username: "Nombre de usuario",
     },
     nmc: {
       nmc0: "No se encontraron películas que",
@@ -130,6 +167,15 @@ const messages = {
       login: "登录",
       logout: "登出",
       searchPlaceholder: "搜索电影...",
+      emailPlaceholder: "输入你的邮箱",
+      passwordPlaceholder: "输入你的密码",
+      usernamePlaceholder: "输入你的用户名",
+      register: "注册",
+    },
+    words: {
+      email: "邮箱",
+      password: "密码",
+      username: "用户名",
     },
     nmc: {
       nmc0: "未找到包含",
@@ -153,6 +199,15 @@ const messages = {
       login: "Kirjaudu sisään",
       logout: "Kirjaudu ulos",
       searchPlaceholder: "Etsi elokuvaa...",
+      emailPlaceholder: "Syötä sähköpostisi",
+      passwordPlaceholder: "Syötä salasanasi",
+      usernamePlaceholder: "Syötä käyttäjätunnuksesi",
+      register: "Rekisteröidy",
+    },
+    words: {
+      email: "Sähköposti",
+      password: "Salasana",
+      username: "Käyttäjätunnus",
     },
     nmc: {
       nmc0: "Ei löytynyt elokuvia, jotka",

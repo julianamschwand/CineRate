@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { useI18n } from "vue-i18n";
-
+import { userdata } from "../../src/api/routes/userRoutes.js";
 const { locale, t } = useI18n();
 
 const movies = ref([
@@ -133,30 +133,45 @@ const filteredMovies = computed(() => {
     movie.title.toLowerCase().includes(SearchQuery.value.toLowerCase())
   );
 });
-const isLoggedIn = ref(false);
 const isDropdownVisible = ref(false);
+const isLoggedIn = ref(false);
+const isAdmin = ref(false);
+const isMod = ref(false);
+onMounted(async () => {
+  try {
+    const user = await userdata();
+    if (user) {
+      isLoggedIn.value = true; // User is logged in
+      isAdmin.value = user.isAdmin || false; // Check if the user is an admin
+      isMod.value = user.isMod || false; // Check if the user is a mod
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+});
 
-function toggleLogin() {
+const toggleLogin = () => {
   if (!isLoggedIn.value) {
-    window.location.href = "/login";
+    router.push("/login");
   } else {
     isLoggedIn.value = false;
   }
-}
-
+};
+const addMovie = () => {
+  router.push("/register");
+};
 function toggleDropdown() {
   isDropdownVisible.value = !isDropdownVisible.value;
 }
 
 function changeLanguage(lang) {
   locale.value = lang;
-  isDropdownVisible.value = false; // Hide the dropdown after selection
+  isDropdownVisible.value = false;
 }
-
 </script>
 <template>
   <div id="action-bar">
-    <button v-if="isadmin"id="add-button" @click="addMovie">
+    <button v-if="isAdmin || !isMod" id="add-button" @click="addMovie">
       <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />
       {{ t("buttons.addMovie") }}
     </button>
