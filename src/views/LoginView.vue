@@ -1,10 +1,24 @@
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter } from "vue-router"
+import { login } from "../api/routes/userRoutes"
+import { ref } from "vue"
+
 const router = useRouter();
+
+const email = ref("")
+const password = ref("")
 
 const RouteToRegister = () => {
   router.push("/register");
 };
+
+const handleLogin = async () => {
+  try {
+    const result = await login(email.value, password.value)
+  } catch (error) {
+    console.log("Error while logging in:", error)
+  }
+}
 </script>
 <template>
   <div class="container">
