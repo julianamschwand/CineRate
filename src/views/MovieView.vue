@@ -1,4 +1,5 @@
 <script setup>
+import router from "@/router";
 import { ref } from "vue";
 
 const newComment = ref("");
@@ -40,6 +41,10 @@ const comments = ref([
   },
 ]);
 
+const RouteToHome = () => {
+  router.push("/");
+};
+
 function handleCommentSubmit() {
   if (newComment.value.trim()) {
     comments.value.push({ username: username, text: newComment.value });
@@ -54,7 +59,8 @@ function deleteComment(CommentId) {
 <template>
   <div class="movie-view">
     <div class="movie-header">
-      <h1 class="titel">titel</h1>
+      <h1 class="titel">titel</h1>  
+      <button id="home-button" type="button" @click="RouteToHome">←</button>
       <div class="rating-section">
         <div class="rate">
           <input type="radio" id="star5" name="rate" value="5" />
@@ -109,6 +115,7 @@ function deleteComment(CommentId) {
                 alt="Delete Comment"
               />
             </button>
+          
           </div>
           <div class="comment">{{ comment.Content }}</div>
         </li>
@@ -312,4 +319,24 @@ img.delete-comment-icon {
   justify-content: space-between;
   margin-bottom: 10px;
 }
+
+#home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: #282c34;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+#home-button:hover {
+  filter: brightness(1.1);
+}
+
 </style>

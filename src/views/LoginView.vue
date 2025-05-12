@@ -20,6 +20,10 @@ const changeLanguage = (lang) => {
 const RouteToRegister = () => {
   router.push("/register");
 };
+
+const RouteToHome = () => {
+  router.push("/");
+};
 </script>
 
 <template>
@@ -62,6 +66,7 @@ const RouteToRegister = () => {
         </div>
         <button id="LoginButton" type="submit">{{ t('buttons.login') }}</button>
         <button id="RegisterButton" @click="RouteToRegister">{{ t('buttons.register') }}</button>
+        <button id="home-button" @click="RouteToHome">←</button>
       </form>
     </div>
   </div>
@@ -190,6 +195,25 @@ input {
 }
 
 button:hover {
+  filter: brightness(1.1);
+}
+
+#home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: #282c34;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+#home-button:hover {
   filter: brightness(1.1);
 }
 </style>

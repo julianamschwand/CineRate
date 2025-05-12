@@ -48,6 +48,7 @@
         </div>
         <button id="RegisterButton" type="submit">{{ t('buttons.register') }}</button>
         <button id="LoginButton" type="button" @click="RouteToLogin">{{ t('buttons.login') }}</button>
+        <button id="home-button" type="button" @click="RouteToHome">←</button>
       </form>
     </div>
   </div>
@@ -87,6 +88,10 @@ export default {
       router.push("/login");
     };
 
+    const RouteToHome = () => {
+      router.push("/");
+    };
+
     return {
       locale,
       t,
@@ -98,6 +103,7 @@ export default {
       password,
       handleregister,
       RouteToLogin,
+      RouteToHome,
     };
   },
 };
@@ -225,5 +231,39 @@ input {
 
 button:hover {
   background-color: #282c34;
+}
+
+#home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: #282c34;
+  font-size: 1rem;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+#home-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #8ac379;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: #282c34;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+#home-button:hover {
+  filter: brightness(1.1);
 }
 </style>
