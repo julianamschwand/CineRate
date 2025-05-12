@@ -235,10 +235,32 @@ function deleteComment(CommentId) {
   color: white;
 }
 .comments-section ul {
+  overflow: scroll;
+  height: 30rem;
   list-style-type: none;
   padding: 10px;
   margin-bottom: 15px;
+  overflow-x: hidden;
 }
+.comments-section ul::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comments-section ul::-webkit-scrollbar-track {
+  background: #20242a;
+  border-radius: 10px;
+}
+
+.comments-section ul::-webkit-scrollbar-thumb {
+  background-color: #8ac379;
+  border-radius: 10px;
+  border: 2px solid #20242a;
+}
+
+.comments-section ul::-webkit-scrollbar-thumb:hover {
+  background-color: #8ac379;
+}
+
 li {
   padding-bottom: 50px;
 }
@@ -247,6 +269,7 @@ img.delete-comment-icon {
   height: 20px;
   cursor: pointer;
 }
+
 .comment {
   background-color: #20242a;
   padding: 10px 15px;
