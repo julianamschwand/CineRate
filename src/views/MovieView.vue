@@ -1,5 +1,25 @@
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { locale, t } = useI18n();
+
+const isDropdownVisible = ref(false);
+const globeclasses = ref("globe-button");
+
+const toggleDropdown = () => {
+  isDropdownVisible.value = !isDropdownVisible.value;
+  if (isDropdownVisible.value) {
+    globeclasses.value = "globe-button globe-dropdown-visible";
+  } else {
+    globeclasses.value = "globe-button";
+  }
+};
+
+const changeLanguage = (lang) => {
+  locale.value = lang;
+  toggleDropdown();
+};
 
 const newComment = ref("");
 const comments = ref([
@@ -55,25 +75,38 @@ function deleteComment(CommentId) {
   <div class="movie-view">
     <div class="movie-header">
       <h1 class="titel">titel</h1>
-      <div class="rating-section">
-        <div class="rate">
-          <input type="radio" id="star5" name="rate" value="5" />
-          <label for="star5" title="text">5 stars</label>
-          <input type="radio" id="star4" name="rate" value="4" />
-          <label for="star4" title="text">4 stars</label>
-          <input type="radio" id="star3" name="rate" value="3" />
-          <label for="star3" title="text">3 stars</label>
-          <input type="radio" id="star2" name="rate" value="2" />
-          <label for="star2" title="text">2 stars</label>
-          <input type="radio" id="star1" name="rate" value="1" />
-          <label for="star1" title="text">1 star</label>
+      <div class="rating-and-globe">
+        <div class="rating-section">
+          <div class="rate">
+            <input type="radio" id="star5" name="rate" value="5" />
+            <label for="star5" title="text">5 stars</label>
+            <input type="radio" id="star4" name="rate" value="4" />
+            <label for="star4" title="text">4 stars</label>
+            <input type="radio" id="star3" name="rate" value="3" />
+            <label for="star3" title="text">3 stars</label>
+            <input type="radio" id="star2" name="rate" value="2" />
+            <label for="star2" title="text">2 stars</label>
+            <input type="radio" id="star1" name="rate" value="1" />
+            <label for="star1" title="text">1 star</label>
+          </div>
+        </div>
+        <div id="globe-dropdown-container">
+          <button :class="globeclasses" @click="toggleDropdown">
+            <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
+          </button>
+          <div v-if="isDropdownVisible" id="globe-dropdown">
+            <div class="dropdown-option" @click="changeLanguage('en')">English 🇬🇧</div>
+            <div class="dropdown-option" @click="changeLanguage('de')">Deutsch 🇩🇪</div>
+            <div class="dropdown-option" @click="changeLanguage('it')">Italiano 🇮🇹</div>
+            <div class="dropdown-option" @click="changeLanguage('sp')">Español 🇪🇸</div>
+            <div class="dropdown-option" @click="changeLanguage('zh')">普通話 🇨🇳</div>
+            <div class="dropdown-option" @click="changeLanguage('fi')">Suomalainen 🇫🇮</div>
+          </div>
         </div>
       </div>
     </div>
     <div class="movie-trailer">
       <iframe
-        width="560"
-        height="315"
         src="https://www.youtube.com/embed/9bZkp7q19f0"
         title="YouTube video player"
         frameborder="0"
@@ -93,7 +126,7 @@ function deleteComment(CommentId) {
       </div>
     </div>
     <div class="comments-section">
-      <h3>Comments</h3>
+      <h3>{{ t("comments") }}</h3>
       <ul>
         <li v-for="(comment, CommentId) in comments" :key="CommentId">
           <div class="creativeclassname">
@@ -136,7 +169,7 @@ function deleteComment(CommentId) {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 80%;
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
@@ -150,7 +183,6 @@ function deleteComment(CommentId) {
   background-color: #8ac379;
   border-radius: 10px;
   margin-bottom: 10px;
-  cursor: pointer;
 }
 .rate {
   float: left;
@@ -334,5 +366,84 @@ img.delete-comment-icon {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.movie-trailer {
+  width: 100%; 
+  margin: 20px 0;
+}
+
+.movie-trailer iframe {
+  width: 100%; 
+  height: 60vh; 
+  border: none;
+}
+
+
+.rating-and-globe {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* Add spacing between the rating section and the globe icon */
+}
+
+.rating-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#globe-dropdown-container {
+  position: relative;
+  z-index: 1000;
+}
+
+button.globe-button {
+  background-color: #8ac379;
+  border: none;
+  padding: 8px;
+  margin: 3px;
+}
+
+#globe-button {
+  background-color: #8ac379;
+  border: none;
+  padding: 8px;
+  border-radius: 10px;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 50px;
+}
+
+#globe-icon {
+  width: 25px;
+  height: 25px;
+  background-color: #8ac379;
+}
+
+#globe-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #8ac379;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 150px;
+}
+
+.dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: rgb(3, 3, 3);
+  font-size: 14px;
+  text-align: left;
+}
+
+.dropdown-option:hover {
+  background-color: #7ab06b;
 }
 </style>
