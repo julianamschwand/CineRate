@@ -56,6 +56,12 @@ const messages = {
       password: "Password",
       username: "Username",
     },
+
+    movieview: {
+      comments: "Comments",
+      addComment: "Add a comment",
+      submit: "Submit",
+    },
   },
   de: {
     movies: {
@@ -86,7 +92,13 @@ const messages = {
     nmc: {
       nmc0: "Keine Filme gefunden, die",
       found: "enthalten",
-    }
+    },
+
+    movieview: {
+      comments: "Kommentare",
+      addComment: "Einen Kommentar hinzufügen",
+      submit: "Einreichen",
+    },
   },
   it: {
     movies: {
@@ -117,7 +129,12 @@ const messages = {
     nmc: {
       nmc0: "Nessun film trovato che",
       found: "contiene",
-    }    
+    },
+    movieview: {
+      comments: "Commenti",
+      addComment: "Aggiungi un commento",
+      submit: "Invia",
+    },    
   },
   sp: {
     movies: {
@@ -148,7 +165,12 @@ const messages = {
     nmc: {
       nmc0: "No se encontraron películas que",
       found: "contengan",
-    }
+    },
+    movieview: {
+      comments: "Comentarios",
+      addComment: "Agregar un comentario",
+      submit: "Enviar",
+    },
     
   },
   zh: {
@@ -180,7 +202,12 @@ const messages = {
     nmc: {
       nmc0: "未找到包含",
       found: "的电影",
-    }
+    },
+    movieview: {
+      comments: "评论",
+      addComment: "添加评论",
+      submit: "提交",
+    },
     
   },
   fi: {
@@ -212,44 +239,13 @@ const messages = {
     nmc: {
       nmc0: "Ei löytynyt elokuvia, jotka",
       found: "sisältävät",
-    }    
-  },
-  
-   
-  
-};
-
-const movieview = {
-  en: {
-    comments: "Comments",
-    addComment: "Add a comment",
-    submit: "Submit",
-  },
-  de: {
-    comments: "Kommentare",
-    addComment: "Einen Kommentar hinzufügen",
-    submit: "Einreichen",
-  },
-  it: {
-    comments: "Commenti",
-    addComment: "Aggiungi un commento",
-    submit: "Invia",
-  },
-  es: {
-    comments: "Comentarios",
-    addComment: "Agregar un comentario",
-    submit: "Enviar",
-  },
-  zh: {
-    comments: "评论",
-    addComment: "添加评论",
-    submit: "提交",
-  },
-  fi: {
-    comments: "Kommentit",
-    addComment: "Lisää kommentti",
-    submit: "Lähetä",
-  },
+    },
+    movieview: {
+      comments: "Kommentit",
+      addComment: "Lisää kommentti",
+      submit: "Lähetä",
+    },    
+  },  
 };
 
 // Create the i18n instance
@@ -258,7 +254,6 @@ const i18n = createI18n({
   fallbackLocale: 'en', // Fallback language
   welcometran, // Translations welcome messages
   messages, // Translations for movies and buttons
-  movieview: 'en', // Translations for movie view
 });
 
 export default i18n;

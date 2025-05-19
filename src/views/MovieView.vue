@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-<<<<<<< HEAD
 import { useI18n } from "vue-i18n";
 
 const { locale, t } = useI18n();
@@ -22,9 +21,7 @@ const changeLanguage = (lang) => {
   toggleDropdown();
 };
 
-=======
 const openedMenuId = ref(null);
->>>>>>> b9210d803b5ff03cb66fc808f58408800978cf26
 const newComment = ref("");
 const username = "AddiTestUser";
 const isadmin = true;
@@ -148,7 +145,7 @@ function deleteComment(CommentId) {
       </div>
     </div>
     <div class="comments-section">
-      <h3>{{ t("comments") }}</h3>
+      <h3>{{ t("movieview.comments") }}</h3>
       <ul>
         <li v-for="(comment, CommentId) in comments" :key="CommentId">
           <div class="creativeclassname">
@@ -193,7 +190,7 @@ function deleteComment(CommentId) {
 
       <textarea
         v-model="newComment"
-        placeholder="Add a comment"
+        :placeholder="t('movieview.addComment')"
         :disabled="!isLoggedIn || !isadmin"
       ></textarea>
       <button
@@ -201,7 +198,7 @@ function deleteComment(CommentId) {
         :disabled="!isLoggedIn || !isadmin"
         class="submit-button"
       >
-        Submit
+        {{ t("movieview.submit") }}
       </button>
     </div>
     <div
