@@ -309,6 +309,7 @@ function deleteComment(CommentId) {
   list-style-type: none;
   padding: 10px;
   margin-bottom: 15px;
+  position: relative;
 }
 .comments-section ul::-webkit-scrollbar {
   width: 8px;
