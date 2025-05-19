@@ -368,6 +368,9 @@ function deleteComment(CommentId) {
 
 li {
   padding-bottom: 50px;
+  position: relative;
+  overflow: visible;
+  
 }
 
 .comment {
