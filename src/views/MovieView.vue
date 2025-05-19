@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-<<<<<<< HEAD
 import { useI18n } from "vue-i18n";
 
 const { locale, t } = useI18n();
@@ -22,9 +21,7 @@ const changeLanguage = (lang) => {
   toggleDropdown();
 };
 
-=======
 const openedMenuId = ref(null);
->>>>>>> b9210d803b5ff03cb66fc808f58408800978cf26
 const newComment = ref("");
 const username = "AddiTestUser";
 const isadmin = true;
