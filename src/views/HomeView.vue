@@ -4,7 +4,8 @@ import MovieCard from "@/components/MovieCard.vue";
 import { useI18n } from "vue-i18n";
 import { userdata } from "../../src/api/routes/userRoutes.js";
 import { useRouter } from "vue-router"
-const { locale, t } = useI18n();
+import LanguageDropdown from "@/components/LanguageDropdown.vue";
+const { t } = useI18n();
 
 const movies = ref([
   {
@@ -134,7 +135,6 @@ const filteredMovies = computed(() => {
     movie.title.toLowerCase().includes(SearchQuery.value.toLowerCase())
   );
 });
-const isDropdownVisible = ref(false);
 const isLoggedIn = ref(false);
 const isAdmin = ref(false);
 const isMod = ref(false);
@@ -164,18 +164,9 @@ const toggleLogin = () => {
 const addMovie = () => {
   router.push("/addmovie");
 };
-
-function toggleDropdown() {
-  isDropdownVisible.value = !isDropdownVisible.value;
-}
-
-function changeLanguage(lang) {
-  locale.value = lang;
-  isDropdownVisible.value = false;
-}
 </script>
 <template>
-  <div id="action-bar">
+  <div class="navbar">
     <button v-if="isAdmin || !isMod" id="add-button" @click="addMovie">
       <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />
       {{ t("buttons.addMovie") }}
@@ -190,31 +181,7 @@ function changeLanguage(lang) {
       />
     </div>
     <div id="button-group">
-      <div id="globe-dropdown-container">
-        <button id="globe-button" @click="toggleDropdown">
-          <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
-        </button>
-        <div v-if="isDropdownVisible" id="globe-dropdown">
-          <div class="dropdown-option" @click="changeLanguage('en')">
-            English 🇬🇧
-          </div>
-          <div class="dropdown-option" @click="changeLanguage('de')">
-            Deutsch 🇩🇪
-          </div>
-          <div class="dropdown-option" @click="changeLanguage('it')">
-            Italiano 🇮🇹
-          </div>
-          <div class="dropdown-option" @click="changeLanguage('sp')">
-            Español 🇪🇸
-          </div>
-          <div class="dropdown-option" @click="changeLanguage('zh')">
-            普通話 🇨🇳
-          </div>
-          <div class="dropdown-option" @click="changeLanguage('fi')">
-            Suomalainen 🇫🇮
-          </div>
-        </div>
-      </div>
+      <LanguageDropdown/>
       <button id="login-button" @click="toggleLogin">
         {{ isLoggedIn ? t("buttons.logout") : t("buttons.login") }}
       </button>
@@ -256,12 +223,6 @@ body {
   margin-right: 5px;
 }
 
-#action-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 #search-bar {
   padding: 10px;
   padding-right: 20svb;
@@ -281,6 +242,7 @@ body {
   background-color: #8ac379;
   padding: 5px;
   border-radius: 5px;
+  max-height: 100%;
 }
 
 #search-icon {
@@ -318,53 +280,6 @@ body {
 
 #login-button:hover {
   background-color: #8ac379;
-}
-
-#globe-dropdown-container {
-  position: relative;
-}
-
-#globe-dropdown {
-  position: absolute;
-  top: 100%; /* Position the dropdown below the button */
-  left: -50%;
-  background-color: #8ac379;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-  z-index: 1000; /* Ensure it appears in the foreground */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 120px;
-}
-
-.dropdown-option {
-  padding: 8px 12px;
-  cursor: pointer;
-  color: #20242a;
-  font-size: 14px;
-  gap: 0px;
-}
-
-#login-button:hover {
-  background-color: #8ac379;
-}
-
-#globe-button {
-  background-color: #8ac379;
-  border: none;
-  border-radius: 10px;
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  margin-right: 10px;
-}
-
-#globe-icon {
-  width: 25px;
-  height: 25px;
 }
 
 div h1 {
