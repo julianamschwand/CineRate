@@ -1,72 +1,123 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+//import { userdata } from "@/api/routes/userRoutes";
+import { editcomment } from "@/api/routes/commentRoutes";
+async function userdata() {
+  return {
+    id: 123,
+    username: "FakeUser",
+    email: "fake@user.com",
+    role: "user", // or "user" if needed
+  };
+}
 const openedMenuId = ref(null);
 const newComment = ref("");
-const username = "AddiTestUser";
-const isadmin = true;
-const isLoggedIn = true;
+const menuPosition = ref({ top: 1000, left: 0 });
+const user = ref(null);
+const isadmin = ref(false);
+const isLoggedIn = ref(false);
+const currentUserId = ref(null);
+
 const comments = ref([
   {
     CommentId: 1,
     Content: "Das isch dr best Film wo ich je gseh ha!",
-    fk_UserDataId: 1,
+    CommentUserId: 1,
     fk_MovieId: 1,
     username: "Luca",
   },
   {
     CommentId: 2,
     Content: "Ganz okay, aber d’Story het chli lahm gfange.",
-    fk_UserDataId: 2,
+    CommentUserId: 2,
     fk_MovieId: 1,
     username: "Mira",
   },
   {
     CommentId: 2,
     Content: "Ganz okay, aber d’Story het chli lahm gfange.",
-    fk_UserDataId: 2,
+    CommentUserId: 2,
     fk_MovieId: 1,
-    username: "",
+    username: "example",
   },
   {
     CommentId: 3,
     Content: "Soundtrack 10/10, würd no mal luege!",
-    fk_UserDataId: 3,
+    CommentUserId: 3,
     fk_MovieId: 1,
     username: "Kevin",
   },
   {
     CommentId: 4,
     Content: "Mega Kamerafüehrig, aber dä Schluss het mi enttäuscht.",
-    fk_UserDataId: 4,
+    CommentUserId: 4,
     fk_MovieId: 1,
     username: "Sandra",
   },
   {
     CommentId: 5,
     Content: "Wägem Hauptcharakter han ich fast abgstellt 😅",
-    fk_UserDataId: 5,
+    CommentUserId: 5,
     fk_MovieId: 1,
     username: "Joel",
   },
 ]);
+onMounted(async () => {
+  const response = await userdata();
+  if (response) {
+    user.value = response;
+    currentUserId.value = response.id;
+    isLoggedIn.value = true;
+    role.value = response.role;
+    isadmin.value = role.value === "admin";
+  }
+});
 function toggleMenu(id, event) {
-  const { clientX, clientY } = event;
   openedMenuId.value = id;
+
+  const rect = event.currentTarget.getBoundingClientRect();
+
   menuPosition.value = {
-    top: clientY + 10, // small offset down
-    left: clientX + 10, // small offset right
+    top: rect.bottom + window.scrollY + 8, // unterhalb vom Button + Scroll
+    left: rect.left + window.scrollX + 50, // links vom Button + Scroll
   };
 }
 
 function handleCommentSubmit() {
   if (newComment.value.trim()) {
-    comments.value.push({ username: username, text: newComment.value });
+    comments.value.push({
+      CommentId: Date.now(),
+      Content: newComment.value,
+      CommentUserId: currentUserId.value,
+      username: user.value?.username ?? "Unbekannt",
+    });
     newComment.value = "";
   }
 }
-function deleteComment(CommentId) {
-  console.log("Deleting comment with CommentId:", CommentId);
-  comments.value = comments.value.filter((_, i) => i !== CommentId);
+//await editcomment(commentId, newContent);
+function isCorrectAccount(commentUserId) {
+  return currentUserId.value != null && commentUserId === currentUserId.value;
+}
+function editCommentById(commentId) {
+  const comment = comments.value.find((c) => c.CommentId === commentId);
+  console.log("Edit requested for ID:", commentId, "Found:", comment);
+
+  if (comment) {
+    const newContent = prompt("Bearbeite deinen Kommentar:", comment.Content);
+    if (newContent !== null && newContent.trim() !== "") {
+      comment.Content = newContent;
+      console.log("Kommentar geändert:", comment);
+    } else {
+      console.log("Kein neuer Inhalt angegeben.");
+    }
+  } else {
+    console.warn("Kommentar nicht gefunden für ID:", commentId);
+  }
+}
+
+function deleteComment(commentId) {
+  console.log("Deleting comment with ID:", commentId);
+  comments.value = comments.value.filter((c) => c.CommentId !== commentId);
 }
 </script>
 <template>
@@ -117,7 +168,7 @@ function deleteComment(CommentId) {
           <div class="creativeclassname">
             <strong>{{ comment.username }}:</strong>
             <button
-              v-if="isadmin || comment.username === username"
+              v-if="isadmin || comment.username === user?.username"
               @click="(e) => toggleMenu(comment.CommentId, e)"
               class="meatballmenuopend"
             >
@@ -127,28 +178,6 @@ function deleteComment(CommentId) {
                 alt="meatballmenu"
               />
             </button>
-
-            <!--<div v-if="isMenuOpen(comment.CommentId)" class="delete-menu">
-              <ul></ul>
-              <button
-                @click="deleteComment(comment.CommentId)"
-                class="delete-comment-button"
-              >
-                <svg
-                  class="delete-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M135.2 17.7C140.1 7 150.5 0 162.3 0H285.7C297.5 0 307.9 7 312.8 17.7L324.5 44.8H432C440.8 44.8 448 52 448 60.8V76.8C448 85.6 440.8 92.8 432 92.8H416.2L389.7 467.7C388.6 488.8 371.2 505.6 350.1 505.6H97.9C76.8 505.6 59.4 488.8 58.3 467.7L31.8 92.8H16C7.2 92.8 0 85.6 0 76.8V60.8C0 52 7.2 44.8 16 44.8H123.5L135.2 17.7z"
-                  />
-                </svg>
-                Delete
-              </button>
-            </div>-->
           </div>
           <div class="comment">{{ comment.Content }}</div>
         </li>
@@ -157,11 +186,11 @@ function deleteComment(CommentId) {
       <textarea
         v-model="newComment"
         placeholder="Add a comment"
-        :disabled="!isLoggedIn || !isadmin"
+        :disabled="!isLoggedIn"
       ></textarea>
       <button
         @click="handleCommentSubmit"
-        :disabled="!isLoggedIn || !isadmin"
+        :disabled="!isLoggedIn"
         class="submit-button"
       >
         Submit
@@ -170,7 +199,10 @@ function deleteComment(CommentId) {
     <div
       v-if="openedMenuId !== null"
       class="delete-menu"
-      :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+      :style="{
+        top: menuPosition.top + 'px',
+        left: menuPosition.left + 'px',
+      }"
     >
       <ul>
         <li>
@@ -191,6 +223,13 @@ function deleteComment(CommentId) {
               />
             </svg>
             Delete
+          </button>
+          <button
+            v-if="isCorrectAccount(comment.CommentUserId)"
+            @click="() => editCommentById(comment.CommentId)"
+            class="edit-comment-button"
+          >
+            Edit
           </button>
         </li>
       </ul>
@@ -334,7 +373,6 @@ li {
   padding-bottom: 50px;
   position: relative;
   overflow: visible;
-  
 }
 
 .comment {
@@ -402,6 +440,13 @@ li {
   border: 1px solid #444;
   padding: 6px 10px;
   border-radius: 5px;
+}
+.delete-menu ul {
+  list-style-type: none;
+  padding: 10px;
+}
+.delete-menu li {
+  padding-bottom: 5px;
 }
 .delete-menu .delete-comment-button {
   background: none;
