@@ -219,12 +219,46 @@ const messages = {
   
 };
 
+const movieview = {
+  en: {
+    comments: "Comments",
+    addComment: "Add a comment",
+    submit: "Submit",
+  },
+  de: {
+    comments: "Kommentare",
+    addComment: "Einen Kommentar hinzufügen",
+    submit: "Einreichen",
+  },
+  it: {
+    comments: "Commenti",
+    addComment: "Aggiungi un commento",
+    submit: "Invia",
+  },
+  es: {
+    comments: "Comentarios",
+    addComment: "Agregar un comentario",
+    submit: "Enviar",
+  },
+  zh: {
+    comments: "评论",
+    addComment: "添加评论",
+    submit: "提交",
+  },
+  fi: {
+    comments: "Kommentit",
+    addComment: "Lisää kommentti",
+    submit: "Lähetä",
+  },
+};
+
 // Create the i18n instance
 const i18n = createI18n({
   locale: 'en', // Default language
   fallbackLocale: 'en', // Fallback language
   welcometran, // Translations welcome messages
   messages, // Translations for movies and buttons
+  movieview: 'en', // Translations for movie view
 });
 
 export default i18n;
