@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+<<<<<<< HEAD
 import { useI18n } from "vue-i18n";
 
 const { locale, t } = useI18n();
@@ -21,7 +22,13 @@ const changeLanguage = (lang) => {
   toggleDropdown();
 };
 
+=======
+const openedMenuId = ref(null);
+>>>>>>> b9210d803b5ff03cb66fc808f58408800978cf26
 const newComment = ref("");
+const username = "AddiTestUser";
+const isadmin = true;
+const isLoggedIn = true;
 const comments = ref([
   {
     CommentId: 1,
@@ -36,6 +43,13 @@ const comments = ref([
     fk_UserDataId: 2,
     fk_MovieId: 1,
     username: "Mira",
+  },
+  {
+    CommentId: 2,
+    Content: "Ganz okay, aber d’Story het chli lahm gfange.",
+    fk_UserDataId: 2,
+    fk_MovieId: 1,
+    username: "",
   },
   {
     CommentId: 3,
@@ -59,6 +73,14 @@ const comments = ref([
     username: "Joel",
   },
 ]);
+function toggleMenu(id, event) {
+  const { clientX, clientY } = event;
+  openedMenuId.value = id;
+  menuPosition.value = {
+    top: clientY + 10, // small offset down
+    left: clientX + 10, // small offset right
+  };
+}
 
 function handleCommentSubmit() {
   if (newComment.value.trim()) {
@@ -132,16 +154,38 @@ function deleteComment(CommentId) {
           <div class="creativeclassname">
             <strong>{{ comment.username }}:</strong>
             <button
-              v-if="!isadmin || comment.username == username"
-              @click="deleteComment(CommentId)"
-              class="delete-comment-button"
+              v-if="isadmin || comment.username === username"
+              @click="(e) => toggleMenu(comment.CommentId, e)"
+              class="meatballmenuopend"
             >
               <img
-                class="delete-comment-icon"
-                src="@/assets/images/icons/delete-button.svg"
-                alt="Delete Comment"
+                class="meatballmenuimage"
+                src="../assets/images/icons/meatballmenu.svg"
+                alt="meatballmenu"
               />
             </button>
+
+            <!--<div v-if="isMenuOpen(comment.CommentId)" class="delete-menu">
+              <ul></ul>
+              <button
+                @click="deleteComment(comment.CommentId)"
+                class="delete-comment-button"
+              >
+                <svg
+                  class="delete-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 448 512"
+                  width="20"
+                  height="20"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M135.2 17.7C140.1 7 150.5 0 162.3 0H285.7C297.5 0 307.9 7 312.8 17.7L324.5 44.8H432C440.8 44.8 448 52 448 60.8V76.8C448 85.6 440.8 92.8 432 92.8H416.2L389.7 467.7C388.6 488.8 371.2 505.6 350.1 505.6H97.9C76.8 505.6 59.4 488.8 58.3 467.7L31.8 92.8H16C7.2 92.8 0 85.6 0 76.8V60.8C0 52 7.2 44.8 16 44.8H123.5L135.2 17.7z"
+                  />
+                </svg>
+                Delete
+              </button>
+            </div>-->
           </div>
           <div class="comment">{{ comment.Content }}</div>
         </li>
@@ -150,15 +194,43 @@ function deleteComment(CommentId) {
       <textarea
         v-model="newComment"
         placeholder="Add a comment"
-        :disabled="!isLoggedIn"
+        :disabled="!isLoggedIn || !isadmin"
       ></textarea>
       <button
         @click="handleCommentSubmit"
-        :disabled="isLoggedIn"
+        :disabled="!isLoggedIn || !isadmin"
         class="submit-button"
       >
         Submit
       </button>
+    </div>
+    <div
+      v-if="openedMenuId !== null"
+      class="delete-menu"
+      :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+    >
+      <ul>
+        <li>
+          <button
+            @click="deleteComment(openedMenuId)"
+            class="delete-comment-button"
+          >
+            <svg
+              class="delete-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+              width="20"
+              height="20"
+              fill="currentColor"
+            >
+              <path
+                d="M135.2 17.7C140.1 7 150.5 0 162.3 0H285.7C297.5 0 307.9 7 312.8 17.7L324.5 44.8H432C440.8 44.8 448 52 448 60.8V76.8C448 85.6 440.8 92.8 432 92.8H416.2L389.7 467.7C388.6 488.8 371.2 505.6 350.1 505.6H97.9C76.8 505.6 59.4 488.8 58.3 467.7L31.8 92.8H16C7.2 92.8 0 85.6 0 76.8V60.8C0 52 7.2 44.8 16 44.8H123.5L135.2 17.7z"
+              />
+            </svg>
+            Delete
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -267,12 +339,12 @@ function deleteComment(CommentId) {
   color: white;
 }
 .comments-section ul {
-  overflow: scroll;
+  overflow-y: auto;
+  overflow-x: visible;
   height: 30rem;
   list-style-type: none;
   padding: 10px;
   margin-bottom: 15px;
-  overflow-x: hidden;
 }
 .comments-section ul::-webkit-scrollbar {
   width: 8px;
@@ -296,13 +368,9 @@ function deleteComment(CommentId) {
 li {
   padding-bottom: 50px;
 }
-img.delete-comment-icon {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
 
 .comment {
+  position: relative;
   background-color: #20242a;
   padding: 10px 15px;
   margin-bottom: 10px;
@@ -358,14 +426,45 @@ img.delete-comment-icon {
   cursor: pointer;
   padding: 0;
 }
-.delete-comment-button:hover {
-  background-color: red;
+
+.delete-menu {
+  position: absolute;
+  z-index: 9999;
+  background-color: #2e2e2e;
+  border: 1px solid #444;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+.delete-menu .delete-comment-button {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.delete-menu .delete-comment-button:hover .delete-icon {
+  color: red;
+}
+.meatballmenuimage {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+.meatballmenuopend {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 .creativeclassname {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+  position: relative;
 }
 
 .movie-trailer {
