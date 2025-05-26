@@ -1,8 +1,8 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { login } from "../api/routes/userRoutes"
-import { ref } from "vue"
+import { login, userdata } from "@/api/routes/userRoutes";
+import { ref } from "vue";
 
 const router = useRouter();
 const { locale, t } = useI18n();
@@ -10,13 +10,15 @@ const { locale, t } = useI18n();
 const isDropdownVisible = ref(false);
 const globeclasses = ref("globe-button");
 
+const email = ref("");
+const password = ref("");
+const errorMessage = ref("");
+
 const toggleDropdown = () => {
   isDropdownVisible.value = !isDropdownVisible.value;
-  if (isDropdownVisible.value) {
-    globeclasses.value = "globe-button globe-dropdown-visible";
-  } else {
-    globeclasses.value = "globe-button";
-  }
+  globeclasses.value = isDropdownVisible.value
+    ? "globe-button globe-dropdown-visible"
+    : "globe-button";
 };
 
 const changeLanguage = (lang) => {
@@ -29,12 +31,25 @@ const RouteToRegister = () => {
 };
 
 const handleLogin = async () => {
+  errorMessage.value = "";
   try {
-    const result = await login(email.value, password.value)
+    const result = await login(email.value, password.value);
+    const user = await userdata();
+
+    if (user?.id) {
+      console.log("Eingeloggt als:", user);
+      router.push("/");
+    } else {
+      errorMessage.value =
+        "Login fehlgeschlagen. Bitte überprüfe deine Eingaben.";
+      console.log(document.cookie);
+    }
   } catch (error) {
-    console.log("Error while logging in:", error)
+    console.log("Fehler beim Login:", error);
+    errorMessage.value = "Serverfehler oder ungültige Anmeldedaten.";
   }
-}
+  console.log("SessionId Cookie:", document.cookie);
+};
 </script>
 
 <template>
@@ -50,7 +65,6 @@ const handleLogin = async () => {
         </button>
       </div>
       <div id="globe-dropdown-container">
-        <div></div>
         <button :class="globeclasses" @click="toggleDropdown">
           <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
         </button>
@@ -97,8 +111,11 @@ const handleLogin = async () => {
             v-model="password"
           />
         </div>
+        <p v-if="errorMessage" style="color: red; margin-bottom: 10px">
+          {{ errorMessage }}
+        </p>
         <button id="LoginButton" type="submit">{{ t("buttons.login") }}</button>
-        <button id="RegisterButton" @click="RouteToRegister">
+        <button id="RegisterButton" type="button" @click="RouteToRegister">
           {{ t("buttons.register") }}
         </button>
       </form>

@@ -1,3 +1,50 @@
+<script setup>
+import { register } from "@/api/routes/userRoutes";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
+
+const { locale, t } = useI18n();
+const router = useRouter();
+
+const isDropdownVisible = ref(false);
+const username = ref("");
+const email = ref("");
+const password = ref("");
+const errorMessage = ref("");
+
+const toggleDropdown = () => {
+  isDropdownVisible.value = !isDropdownVisible.value;
+};
+
+const changeLanguage = (lang) => {
+  locale.value = lang;
+  isDropdownVisible.value = false;
+};
+
+const handleregister = async () => {
+  errorMessage.value = "";
+  try {
+    const result = await register(username.value, email.value, password.value);
+
+    if (result?.success || result?.id) {
+      console.log("Registrierung erfolgreich:", result);
+      router.push("/login");
+    } else {
+      errorMessage.value =
+        "Registrierung fehlgeschlagen. Bitte überprüfe deine Daten.";
+    }
+  } catch (error) {
+    console.error("Fehler bei Registrierung:", error);
+    errorMessage.value = "Serverfehler oder ungültige Eingaben.";
+  }
+};
+
+const RouteToLogin = () => {
+  router.push("/login");
+};
+</script>
+
 <template>
   <div class="container">
     <div class="register-view">
@@ -73,60 +120,13 @@
         <button id="LoginButton" type="button" @click="RouteToLogin">
           {{ t("buttons.login") }}
         </button>
+        <p v-if="errorMessage" style="color: red; margin-bottom: 10px">
+          {{ errorMessage }}
+        </p>
       </form>
     </div>
   </div>
 </template>
-
-<script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-
-export default {
-  name: "RegisterView",
-  setup() {
-    const { locale, t } = useI18n();
-    const router = useRouter();
-    const isDropdownVisible = ref(false);
-    const username = ref("");
-    const email = ref("");
-    const password = ref("");
-
-    const toggleDropdown = () => {
-      isDropdownVisible.value = !isDropdownVisible.value;
-    };
-
-    const changeLanguage = (lang) => {
-      locale.value = lang;
-      isDropdownVisible.value = false; // Close the dropdown after selection
-    };
-
-    const handleregister = () => {
-      console.log("Username:", username.value);
-      console.log("Email:", email.value);
-      console.log("Password:", password.value);
-    };
-
-    const RouteToLogin = () => {
-      router.push("/login");
-    };
-
-    return {
-      locale,
-      t,
-      isDropdownVisible,
-      toggleDropdown,
-      changeLanguage,
-      username,
-      email,
-      password,
-      handleregister,
-      RouteToLogin,
-    };
-  },
-};
-</script>
 
 <style scoped>
 #globe-dropdown-container {

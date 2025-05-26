@@ -1,15 +1,9 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
+
 //import { userdata } from "@/api/routes/userRoutes";
-import { editcomment } from "@/api/routes/commentRoutes";
-async function userdata() {
-  return {
-    id: 123,
-    username: "FakeUser",
-    email: "fake@user.com",
-    role: "user", // or "user" if needed
-  };
-}
+import { editcomment, addcomment } from "@/api/routes/commentRoutes";
+
 const openedMenuId = ref(null);
 const newComment = ref("");
 const menuPosition = ref({ top: 1000, left: 0 });
@@ -17,7 +11,9 @@ const user = ref(null);
 const isadmin = ref(false);
 const isLoggedIn = ref(false);
 const currentUserId = ref(null);
-
+const isEditing = ref(false);
+const editingCommentId = ref(null);
+const currentMovieId = ref(1);
 const comments = ref([
   {
     CommentId: 1,
@@ -74,54 +70,76 @@ onMounted(async () => {
 });
 function toggleMenu(id, event) {
   openedMenuId.value = id;
-
   const rect = event.currentTarget.getBoundingClientRect();
-
   menuPosition.value = {
     top: rect.bottom + window.scrollY + 8,
     left: rect.left + window.scrollX + 50,
   };
 }
 
-function handleCommentSubmit() {
-  if (newComment.value.trim()) {
-    comments.value.push({
-      CommentId: Date.now(),
-      Content: newComment.value,
-      CommentUserId: currentUserId.value,
-      username: user.value?.username ?? "Unbekannt",
-      Role: "admin",
-    });
-    newComment.value = "";
+async function handleCommentSubmit() {
+  const trimmed = newComment.value.trim();
+  if (!trimmed) return;
+
+  if (isEditing.value) {
+    const comment = comments.value.find(
+      (c) => c.CommentId === editingCommentId.value
+    );
+    if (!comment) {
+      console.warn("Kommentar zum Bearbeiten nicht gefunden.");
+      return;
+    }
+
+    try {
+      await editcomment(comment.CommentId, trimmed);
+      comment.Content = trimmed;
+      console.log("Kommentar erfolgreich im Backend aktualisiert:", comment);
+    } catch (error) {
+      console.error("Fehler beim Bearbeiten:", error);
+    }
+
+    isEditing.value = false;
+    editingCommentId.value = null;
+  } else {
+    try {
+      const response = await addcomment(1, trimmed);
+      console.log("addcomment response:", response);
+      const createdComment = {
+        CommentId: response?.commentid ?? Date.now(),
+        Content: trimmed,
+        CommentUserId: currentUserId.value,
+        fk_MovieId: 1,
+        username: user.value?.username ?? "Unbekannt",
+      };
+      comments.value.push(createdComment);
+      console.log("Kommentar erfolgreich erstellt:", createdComment);
+    } catch (error) {
+      console.error("Fehler beim Erstellen:", error);
+    }
   }
-}
-//await editcomment(commentId, newContent);
-function isCorrectAccount(commentUserId) {
-  console.log("commentUserId received:", commentUserId);
-  console.log("currentUserId:", currentUserId.value);
-  return currentUserId.value != null && commentUserId === currentUserId.value;
+
+  newComment.value = "";
 }
 
+const currentComment = computed(() => {
+  return comments.value.find((c) => c.CommentId === openedMenuId.value);
+});
 function editCommentById(commentId) {
   const comment = comments.value.find((c) => c.CommentId === commentId);
-  console.log("Edit requested for ID:", commentId, "Found:", comment);
-
-  if (comment) {
-    const newContent = prompt("Bearbeite deinen Kommentar:", comment.Content);
-    if (newContent !== null && newContent.trim() !== "") {
-      comment.Content = newContent;
-      console.log("Kommentar geändert:", comment);
-    } else {
-      console.log("Kein neuer Inhalt angegeben.");
-    }
-  } else {
+  if (!comment) {
     console.warn("Kommentar nicht gefunden für ID:", commentId);
+    return;
   }
+  newComment.value = comment.Content;
+  isEditing.value = true;
+  editingCommentId.value = commentId;
+  openedMenuId.value = null;
 }
 
 function deleteComment(commentId) {
   console.log("Deleting comment with ID:", commentId);
   comments.value = comments.value.filter((c) => c.CommentId !== commentId);
+  openedMenuId.value = null;
 }
 </script>
 <template>
@@ -197,7 +215,7 @@ function deleteComment(commentId) {
         :disabled="!isLoggedIn"
         class="submit-button"
       >
-        Submit
+        {{ isEditing ? "Update" : "Submit" }}
       </button>
     </div>
     <div
@@ -229,10 +247,29 @@ function deleteComment(commentId) {
             Delete
           </button>
           <button
-            v-if="isLoggedIn && comment.CommentUserId === currentUserId.value"
-            @click="() => editCommentById(comment.CommentId)"
+            v-if="currentComment?.CommentUserId === currentUserId"
+            @click="() => editCommentById(currentComment?.CommentId)"
             class="edit-comment-button"
           >
+            <svg
+              class="edit-icon"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+              />
+              <path
+                d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+              />
+            </svg>
             Edit
           </button>
         </li>
@@ -462,7 +499,7 @@ li {
   cursor: pointer;
 }
 
-.delete-menu .delete-comment-button:hover .delete-icon {
+.delete-menu .delete-comment-button:hover {
   color: red;
 }
 .meatballmenuimage {
@@ -482,5 +519,19 @@ li {
   justify-content: space-between;
   margin-bottom: 10px;
   position: relative;
+}
+.edit-comment-button {
+  background: none;
+  border: none;
+  padding: 0px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.edit-comment-button:hover {
+  color: #ffc700;
+  padding-left: 0px;
 }
 </style>
