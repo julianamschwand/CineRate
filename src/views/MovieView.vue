@@ -1,4 +1,5 @@
 <script setup>
+import router from "@/router";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
@@ -70,14 +71,10 @@ const comments = ref([
     username: "Joel",
   },
 ]);
-function toggleMenu(id, event) {
-  const { clientX, clientY } = event;
-  openedMenuId.value = id;
-  menuPosition.value = {
-    top: clientY + 10, // small offset down
-    left: clientX + 10, // small offset right
-  };
-}
+
+const RouteToHome = () => {
+  router.push("/");
+};
 
 function handleCommentSubmit() {
   if (newComment.value.trim()) {
@@ -93,34 +90,20 @@ function deleteComment(CommentId) {
 <template>
   <div class="movie-view">
     <div class="movie-header">
-      <h1 class="titel">titel</h1>
-      <div class="rating-and-globe">
-        <div class="rating-section">
-          <div class="rate">
-            <input type="radio" id="star5" name="rate" value="5" />
-            <label for="star5" title="text">5 stars</label>
-            <input type="radio" id="star4" name="rate" value="4" />
-            <label for="star4" title="text">4 stars</label>
-            <input type="radio" id="star3" name="rate" value="3" />
-            <label for="star3" title="text">3 stars</label>
-            <input type="radio" id="star2" name="rate" value="2" />
-            <label for="star2" title="text">2 stars</label>
-            <input type="radio" id="star1" name="rate" value="1" />
-            <label for="star1" title="text">1 star</label>
-          </div>
-        </div>
-        <div id="globe-dropdown-container">
-          <button :class="globeclasses" @click="toggleDropdown">
-            <img src="@/assets/images/icons/GlobeIcon.svg" id="globe-icon" />
-          </button>
-          <div v-if="isDropdownVisible" id="globe-dropdown">
-            <div class="dropdown-option" @click="changeLanguage('en')">English 🇬🇧</div>
-            <div class="dropdown-option" @click="changeLanguage('de')">Deutsch 🇩🇪</div>
-            <div class="dropdown-option" @click="changeLanguage('it')">Italiano 🇮🇹</div>
-            <div class="dropdown-option" @click="changeLanguage('sp')">Español 🇪🇸</div>
-            <div class="dropdown-option" @click="changeLanguage('zh')">普通話 🇨🇳</div>
-            <div class="dropdown-option" @click="changeLanguage('fi')">Suomalainen 🇫🇮</div>
-          </div>
+      <h1 class="titel">titel</h1>  
+      <button id="home-button" type="button" @click="RouteToHome">←</button>
+      <div class="rating-section">
+        <div class="rate">
+          <input type="radio" id="star5" name="rate" value="5" />
+          <label for="star5" title="text">5 stars</label>
+          <input type="radio" id="star4" name="rate" value="4" />
+          <label for="star4" title="text">4 stars</label>
+          <input type="radio" id="star3" name="rate" value="3" />
+          <label for="star3" title="text">3 stars</label>
+          <input type="radio" id="star2" name="rate" value="2" />
+          <label for="star2" title="text">2 stars</label>
+          <input type="radio" id="star1" name="rate" value="1" />
+          <label for="star1" title="text">1 star</label>
         </div>
       </div>
     </div>
@@ -161,28 +144,7 @@ function deleteComment(CommentId) {
                 alt="meatballmenu"
               />
             </button>
-
-            <!--<div v-if="isMenuOpen(comment.CommentId)" class="delete-menu">
-              <ul></ul>
-              <button
-                @click="deleteComment(comment.CommentId)"
-                class="delete-comment-button"
-              >
-                <svg
-                  class="delete-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                  width="20"
-                  height="20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M135.2 17.7C140.1 7 150.5 0 162.3 0H285.7C297.5 0 307.9 7 312.8 17.7L324.5 44.8H432C440.8 44.8 448 52 448 60.8V76.8C448 85.6 440.8 92.8 432 92.8H416.2L389.7 467.7C388.6 488.8 371.2 505.6 350.1 505.6H97.9C76.8 505.6 59.4 488.8 58.3 467.7L31.8 92.8H16C7.2 92.8 0 85.6 0 76.8V60.8C0 52 7.2 44.8 16 44.8H123.5L135.2 17.7z"
-                  />
-                </svg>
-                Delete
-              </button>
-            </div>-->
+          
           </div>
           <div class="comment">{{ comment.Content }}</div>
         </li>
@@ -465,85 +427,25 @@ li {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
-  position: relative;
 }
 
-.movie-trailer {
-  width: 100%; 
-  margin: 20px 0;
-}
-
-.movie-trailer iframe {
-  width: 100%; 
-  height: 60vh; 
-  border: none;
-}
-
-
-.rating-and-globe {
-  display: flex;
-  align-items: center;
-  gap: 18px; /* Add spacing between the rating section and the globe icon */
-}
-
-.rating-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#globe-dropdown-container {
-  position: relative;
-  z-index: 1000;
-}
-
-button.globe-button {
-  background-color: #8ac379;
-  border: none;
-  padding: 8px;
-  margin: 3px;
-}
-
-#globe-button {
-  background-color: #8ac379;
-  border: none;
-  padding: 8px;
-  border-radius: 10px;
-  margin: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  width: 50px;
-}
-
-#globe-icon {
-  width: 25px;
-  height: 25px;
-  background-color: #8ac379;
-}
-
-#globe-dropdown {
+#home-button {
   position: absolute;
-  top: 100%;
-  right: 0;
+  top: 20px;
+  left: 20px;
   background-color: #8ac379;
-  padding: 10px;
-  z-index: 1000;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 150px;
-}
-
-.dropdown-option {
-  padding: 8px 12px;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
   cursor: pointer;
-  color: rgb(3, 3, 3);
-  font-size: 14px;
-  text-align: left;
+  color: #282c34;
+  font-size: 2rem;
+  font-weight: bold;
+  z-index: 1000;
 }
 
-.dropdown-option:hover {
-  background-color: #7ab06b;
+#home-button:hover {
+  filter: brightness(1.1);
 }
+
 </style>

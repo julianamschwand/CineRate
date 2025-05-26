@@ -56,12 +56,10 @@ const messages = {
       password: "Password",
       username: "Username",
     },
-
-    movieview: {
-      comments: "Comments",
-      addComment: "Add a comment",
-      submit: "Submit",
-    },
+    nmc: {
+      nmc0: "No movies found that contain",
+      found: "",
+    }
   },
   de: {
     movies: {
