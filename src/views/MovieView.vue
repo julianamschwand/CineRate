@@ -78,8 +78,8 @@ function toggleMenu(id, event) {
   const rect = event.currentTarget.getBoundingClientRect();
 
   menuPosition.value = {
-    top: rect.bottom + window.scrollY + 8, // unterhalb vom Button + Scroll
-    left: rect.left + window.scrollX + 50, // links vom Button + Scroll
+    top: rect.bottom + window.scrollY + 8,
+    left: rect.left + window.scrollX + 50,
   };
 }
 
@@ -90,14 +90,18 @@ function handleCommentSubmit() {
       Content: newComment.value,
       CommentUserId: currentUserId.value,
       username: user.value?.username ?? "Unbekannt",
+      Role: "admin",
     });
     newComment.value = "";
   }
 }
 //await editcomment(commentId, newContent);
 function isCorrectAccount(commentUserId) {
+  console.log("commentUserId received:", commentUserId);
+  console.log("currentUserId:", currentUserId.value);
   return currentUserId.value != null && commentUserId === currentUserId.value;
 }
+
 function editCommentById(commentId) {
   const comment = comments.value.find((c) => c.CommentId === commentId);
   console.log("Edit requested for ID:", commentId, "Found:", comment);
@@ -225,7 +229,7 @@ function deleteComment(commentId) {
             Delete
           </button>
           <button
-            v-if="isCorrectAccount(comment.CommentUserId)"
+            v-if="isLoggedIn && comment.CommentUserId === currentUserId.value"
             @click="() => editCommentById(comment.CommentId)"
             class="edit-comment-button"
           >
