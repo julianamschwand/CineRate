@@ -56,6 +56,10 @@ const messages = {
       password: "Password",
       username: "Username",
     },
+    nmc: {
+      nmc0: "No movies found that contain",
+      found: "",
+    }
   },
   de: {
     movies: {
