@@ -145,7 +145,7 @@ function deleteComment(CommentId) {
       </div>
     </div>
     <div class="comments-section">
-      <h3>{{ t("comments") }}</h3>
+      <h3>{{ t("movieview.comments") }}</h3>
       <ul>
         <li v-for="(comment, CommentId) in comments" :key="CommentId">
           <div class="creativeclassname">
@@ -190,7 +190,7 @@ function deleteComment(CommentId) {
 
       <textarea
         v-model="newComment"
-        placeholder="Add a comment"
+        :placeholder="t('movieview.addComment')"
         :disabled="!isLoggedIn || !isadmin"
       ></textarea>
       <button
@@ -198,7 +198,7 @@ function deleteComment(CommentId) {
         :disabled="!isLoggedIn || !isadmin"
         class="submit-button"
       >
-        Submit
+        {{ t("movieview.submit") }}
       </button>
     </div>
     <div
