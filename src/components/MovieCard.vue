@@ -1,8 +1,9 @@
 <script setup>
 import { useRouter } from "vue-router";
-
+const { locale, t } = useI18n();
+import { getmovies } from "@/api/routes/movieRoutes";
 const router = useRouter();
-
+local.value = getmovies();
 const props = defineProps(["movie"]);
 </script>
 
