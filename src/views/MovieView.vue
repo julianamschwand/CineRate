@@ -1,32 +1,15 @@
 <script setup>
 import router from "@/router";
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
+import LanguageDropdown from "@/components/LanguageDropdown.vue";
 import { useI18n } from "vue-i18n";
-
-const { locale, t } = useI18n();
-
-const isDropdownVisible = ref(false);
-const globeclasses = ref("globe-button");
-
-const toggleDropdown = () => {
-  isDropdownVisible.value = !isDropdownVisible.value;
-  if (isDropdownVisible.value) {
-    globeclasses.value = "globe-button globe-dropdown-visible";
-  } else {
-    globeclasses.value = "globe-button";
-  }
-};
-
-const changeLanguage = (lang) => {
-  locale.value = lang;
-  toggleDropdown();
-};
+const { t } = useI18n()
 
 const openedMenuId = ref(null);
 const newComment = ref("");
-const username = "AddiTestUser";
-const isadmin = true;
-const isLoggedIn = true;
+const menuPosition = ref({ top: 1000, left: 0 });
+const isEditing = ref(false);
+const editingCommentId = ref(null);
 const comments = ref([
   {
     CommentId: 1,
@@ -76,22 +59,95 @@ const RouteToHome = () => {
   router.push("/");
 };
 
-function handleCommentSubmit() {
-  if (newComment.value.trim()) {
-    comments.value.push({ username: username, text: newComment.value });
-    newComment.value = "";
+function toggleMenu(id, event) {
+  openedMenuId.value = id;
+  const rect = event.currentTarget.getBoundingClientRect();
+  menuPosition.value = {
+    top: rect.bottom + window.scrollY + 8,
+    left: rect.left + window.scrollX + 50,
+  };
+}
+
+async function handleCommentSubmit() {
+  const trimmed = newComment.value.trim();
+  if (!trimmed) return;
+  
+  if (isEditing.value) {
+    const comment = comments.value.find(
+      (c) => c.CommentId === editingCommentId.value
+    );
+    if (!comment) {
+      console.warn("Kommentar zum Bearbeiten nicht gefunden.");
+      return;
+    }
+    
+    try {
+      await editcomment(comment.CommentId, trimmed);
+      comment.Content = trimmed;
+      console.log("Kommentar erfolgreich im Backend aktualisiert:", comment);
+    } catch (error) {
+      console.error("Fehler beim Bearbeiten:", error);
+    }
+    
+    isEditing.value = false;
+    editingCommentId.value = null;
+  } else {
+    try {
+      const response = await addcomment(1, trimmed);
+      console.log("addcomment response:", response);
+      const createdComment = {
+        CommentId: response?.commentid ?? Date.now(),
+        Content: trimmed,
+        CommentUserId: currentUserId.value,
+        fk_MovieId: 1,
+        username: user.value?.username ?? "Unbekannt",
+      };
+      comments.value.push(createdComment);
+      console.log("Kommentar erfolgreich erstellt:", createdComment);
+    } catch (error) {
+      console.error("Fehler beim Erstellen:", error);
+    }
   }
+  
+  newComment.value = "";
 }
-function deleteComment(CommentId) {
-  console.log("Deleting comment with CommentId:", CommentId);
-  comments.value = comments.value.filter((_, i) => i !== CommentId);
+
+const currentComment = computed(() => {
+  return comments.value.find((c) => c.CommentId === openedMenuId.value);
+})
+
+function editCommentById(commentId) {
+  const comment = comments.value.find((c) => c.CommentId === commentId);
+  if (!comment) {
+    console.warn("Kommentar nicht gefunden für ID:", commentId);
+    return;
+  }
+  newComment.value = comment.Content;
+  isEditing.value = true;
+  editingCommentId.value = commentId;
+  openedMenuId.value = null;
 }
+
+function deleteComment(commentId) {
+  console.log("Deleting comment with ID:", commentId);
+  comments.value = comments.value.filter((c) => c.CommentId !== commentId);
+  openedMenuId.value = null;
+}
+
+onMounted(async () => {
+  
+});
 </script>
 <template>
-  <div class="movie-view">
-    <div class="movie-header">
-      <h1 class="titel">titel</h1>  
-      <button id="home-button" type="button" @click="RouteToHome">←</button>
+  <div class="navbar">
+    <button class="backbutton" @click="RouteToHome">
+      <img
+          src="@/assets/images/icons/BackIcon.svg"
+          class="back-icon"
+        />
+    </button>
+    <div class="titlecontainer">
+      <h2 class="title">Title</h2>
       <div class="rating-section">
         <div class="rate">
           <input type="radio" id="star5" name="rate" value="5" />
@@ -106,7 +162,10 @@ function deleteComment(CommentId) {
           <label for="star1" title="text">1 star</label>
         </div>
       </div>
-    </div>
+    </div> 
+    <LanguageDropdown/> 
+  </div>
+  <div class="movie-view">
     <div class="movie-trailer">
       <iframe
         src="https://www.youtube.com/embed/9bZkp7q19f0"
@@ -121,20 +180,20 @@ function deleteComment(CommentId) {
         <img src="https://via.placeholder.com/300" alt="Movie Poster" />
       </div>
       <div class="movie-details">
-        <h2>Movie Title</h2>
+        <h4>Movie Title</h4>
         <p>Movie Description</p>
         <p>Movie Release Date</p>
         <p>Movie Rating</p>
       </div>
     </div>
     <div class="comments-section">
-      <h3>{{ t("movieview.comments") }}</h3>
+      <h3>Comments</h3>
       <ul>
         <li v-for="(comment, CommentId) in comments" :key="CommentId">
           <div class="creativeclassname">
             <strong>{{ comment.username }}:</strong>
             <button
-              v-if="isadmin || comment.username === username"
+              v-if="isadmin || comment.username === user?.username"
               @click="(e) => toggleMenu(comment.CommentId, e)"
               class="meatballmenuopend"
             >
@@ -144,7 +203,6 @@ function deleteComment(CommentId) {
                 alt="meatballmenu"
               />
             </button>
-          
           </div>
           <div class="comment">{{ comment.Content }}</div>
         </li>
@@ -152,21 +210,24 @@ function deleteComment(CommentId) {
 
       <textarea
         v-model="newComment"
-        :placeholder="t('movieview.addComment')"
-        :disabled="!isLoggedIn || !isadmin"
+        placeholder="Add a comment"
+        :disabled="!isLoggedIn"
       ></textarea>
       <button
         @click="handleCommentSubmit"
-        :disabled="!isLoggedIn || !isadmin"
+        :disabled="!isLoggedIn"
         class="submit-button"
       >
-        {{ t("movieview.submit") }}
+        {{ isEditing ? "Update" : "Submit" }}
       </button>
     </div>
     <div
       v-if="openedMenuId !== null"
       class="delete-menu"
-      :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+      :style="{
+        top: menuPosition.top + 'px',
+        left: menuPosition.left + 'px',
+      }"
     >
       <ul>
         <li>
@@ -188,6 +249,32 @@ function deleteComment(CommentId) {
             </svg>
             Delete
           </button>
+          <button
+            v-if="currentComment?.CommentUserId === currentUserId"
+            @click="() => editCommentById(currentComment?.CommentId)"
+            class="edit-comment-button"
+          >
+            <svg
+              class="edit-icon"
+              fill="none"
+              height="20"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+              />
+              <path
+                d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+              />
+            </svg>
+            Edit
+          </button>
         </li>
       </ul>
     </div>
@@ -206,15 +293,6 @@ function deleteComment(CommentId) {
   box-sizing: border-box;
 }
 
-.movie-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  background-color: #8ac379;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
 .rate {
   float: left;
   height: 46px;
@@ -250,14 +328,19 @@ function deleteComment(CommentId) {
 .rate > label:hover ~ input:checked ~ label {
   color: #c59b08;
 }
-.titel {
+
+.titlecontainer {
   background-color: #8ac379;
+  color: #20242a;
+  display: flex;
+  justify-content: space-between;
   border-radius: 10px;
-  padding: 8px;
-  padding-right: 300px;
-  width: 130px;
-  cursor: pointer;
+  max-height: 50px;
+  align-items: center;
+  width: 80%;
+  padding-left: 10px;
 }
+
 .rating-section {
   display: flex;
   align-items: center;

@@ -25,11 +25,11 @@ const handleLogin = async () => {
 <template>
   <div class="navbar">
     <button class="backbutton" @click="$router.push('/')">
-          <img
-            src="@/assets/images/icons/BackIcon.svg"
-            id="back-icon"
-          />
-        </button>
+      <img
+        src="@/assets/images/icons/BackIcon.svg"
+        class="back-icon"
+      />
+    </button>
     <LanguageDropdown/>
   </div>
   <div id="logincontainer">
@@ -126,10 +126,5 @@ input {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-}
-
-#back-icon {
-  width: 25px;
-  height: 25px;
 }
 </style>

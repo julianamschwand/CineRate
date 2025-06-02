@@ -39,3 +39,8 @@ button:hover {
   align-items: center;
   justify-content: center;
 }
+
+.back-icon {
+    width: 25px;
+    height: 25px;
+}
