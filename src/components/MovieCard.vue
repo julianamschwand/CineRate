@@ -8,15 +8,15 @@ const props = defineProps(["movie"]);
 
 <template>
   <div id="movie-card" @click="router.push(`/movie/${movie.id}`)">
-    <img :src="movie.cover" id="movie-cover" />
+    <img :src="movie.Poster" id="movie-cover" />
     <div id="movie-info">
       <div id="movie-details">
         <img src="@/assets/images/icons/YearIcon.svg" />
-        <span>{{ movie.year }}</span>
+        <span>{{ movie.Year }}</span>
         <img src="@/assets/images/icons/ClockIcon.svg" />
-        <span>{{ movie.playtime }}</span>
+        <span>{{ movie.Playtime }}</span>
       </div>
-      <h2 id="movie-title">{{ movie.title }}</h2>
+      <h2 id="movie-title">{{ movie.Title }}</h2>
     </div>
   </div>
 </template>

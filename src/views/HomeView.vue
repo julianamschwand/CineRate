@@ -3,155 +3,18 @@ import { ref, computed, onMounted } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { useI18n } from "vue-i18n";
 import { userdata } from "../../src/api/routes/userRoutes.js";
+import { getmovies } from "../../src/api/routes/movieRoutes.js";
 import { useRouter } from "vue-router"
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
-const { t } = useI18n();
+const { locale, t } = useI18n();
 
-const movies = ref([
-  {
-    id: 1,
-    title: "Avengers: Infinity War",
-    playtime: "2h 29m",
-    year: "2018",
-    cover:
-      "src/assets/images/movie_covers/51HUrY93cwL._AC_UF1000,1000_QL80__jpg.png",
-  },
-  {
-    id: 2,
-    title: "Avengers: Endgame",
-    playtime: "3h 2m",
-    year: "2019",
-    cover: "src/assets/images/movie_covers/91-UCbbhoiL_jpg.png",
-  },
-  {
-    id: 3,
-    title: "Cover",
-    playtime: "2h 10m",
-    year: "2021",
-    cover:
-      "src/assets/images/movie_covers/bcc68be4-eede-409b-a63d-e179b28d19b4_jpg.png",
-  },
-  {
-    id: 4,
-    title: "Black Panther",
-    playtime: "2h 15m",
-    year: "2018",
-    cover: "src/assets/images/movie_covers/images.png",
-  },
-  {
-    id: 5,
-    title: "Iron Man 2",
-    playtime: "2h 4m",
-    year: "2010",
-    cover: "src/assets/images/movie_covers/iron_man_two_ver6_jpg.png",
-  },
-  {
-    id: 6,
-    title: "Guardians of the Galaxy",
-    playtime: "2h 1m",
-    year: "2014",
-    cover:
-      "src/assets/images/movie_covers/marvel-guardians-of-the-galaxy-61x91.5cm-movie-poster-37728-1-p_jpg.png",
-  },
-  {
-    id: 7,
-    title: "Lorem Ipsum",
-    playtime: "1h 30m",
-    year: "2021",
-    cover:
-      "src/assets/images/movie_covers/movie-poster-design-template_841014-16988_jpg.png",
-  },
-  {
-    id: 8,
-    title: "Smile",
-    playtime: "1h 45m",
-    year: "2021",
-    cover: "src/assets/images/movie_covers/s-l400_jpg.png",
-  },
-  {
-    id: 9,
-    title: "Avengers: Infinity War",
-    playtime: "2h 29m",
-    year: "2018",
-    cover:
-      "src/assets/images/movie_covers/51HUrY93cwL._AC_UF1000,1000_QL80__jpg.png",
-  },
-  {
-    id: 10,
-    title: "Avengers: Endgame",
-    playtime: "3h 2m",
-    year: "2019",
-    cover: "src/assets/images/movie_covers/91-UCbbhoiL_jpg.png",
-  },
-  {
-    id: 11,
-    title: "Cover",
-    playtime: "2h 10m",
-    year: "2021",
-    cover:
-      "src/assets/images/movie_covers/bcc68be4-eede-409b-a63d-e179b28d19b4_jpg.png",
-  },
-  {
-    id: 12,
-    title: "Black Panther",
-    playtime: "2h 15m",
-    year: "2018",
-    cover: "src/assets/images/movie_covers/images.png",
-  },
-  {
-    id: 13,
-    title: "Iron Man 2",
-    playtime: "2h 4m",
-    year: "2010",
-    cover: "src/assets/images/movie_covers/iron_man_two_ver6_jpg.png",
-  },
-  {
-    id: 14,
-    title: "Guardians of the Galaxy",
-    playtime: "2h 1m",
-    year: "2014",
-    cover:
-      "src/assets/images/movie_covers/marvel-guardians-of-the-galaxy-61x91.5cm-movie-poster-37728-1-p_jpg.png",
-  },
-  {
-    id: 15,
-    title: "Lorem Ipsum",
-    playtime: "1h 30m",
-    year: "2021",
-    cover:
-      "src/assets/images/movie_covers/movie-poster-design-template_841014-16988_jpg.png",
-  },
-  {
-    id: 16,
-    title: "Smile",
-    playtime: "1h 45m",
-    year: "2021",
-    cover: "src/assets/images/movie_covers/s-l400_jpg.png",
-  },
-]);
+const movies = ref([]);
 const SearchQuery = ref("");
-const filteredMovies = computed(() => {
-  return movies.value.filter((movie) =>
-    movie.title.toLowerCase().includes(SearchQuery.value.toLowerCase())
-  );
-});
+
 const isLoggedIn = ref(false);
 const isAdmin = ref(false);
 const isMod = ref(false);
 const router = useRouter();
-
-onMounted(async () => {
-  try {
-    const user = await userdata();
-    if (user) {
-      isLoggedIn.value = true; // User is logged in
-      isAdmin.value = user.isAdmin || false; // Check if the user is an admin
-      isMod.value = user.isMod || false; // Check if the user is a mod
-    }
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-});
 
 const toggleLogin = () => {
   if (!isLoggedIn.value) {
@@ -164,6 +27,32 @@ const toggleLogin = () => {
 const addMovie = () => {
   router.push("/addmovie");
 };
+
+const filteredMovies = computed(() => {
+  return movies.value.filter((movie) =>
+    movie.Title.toLowerCase().includes(SearchQuery.value.toLowerCase())
+  );
+});
+
+onMounted(async () => {
+  try {
+    const user = await userdata();
+    if (user) {
+      isLoggedIn.value = true; // User is logged in
+      isAdmin.value = user.isAdmin || false; // Check if the user is an admin
+      isMod.value = user.isMod || false; // Check if the user is a mod
+    }
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+
+  try {
+    movies.value = await getmovies(locale.value);
+    movies.value = movies.value.movies
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+  }
+});
 </script>
 <template>
   <div class="navbar">
@@ -191,7 +80,7 @@ const addMovie = () => {
     <MovieCard
       v-for="movie in filteredMovies"
       :key="movie.id"
-      :movie="{ ...movie, title: t(`movies.${movie.title}`) }"
+      :movie="movie"
     />
   </div>
   <div v-else>

@@ -121,7 +121,7 @@ function deleteComment(CommentId) {
         <img src="https://via.placeholder.com/300" alt="Movie Poster" />
       </div>
       <div class="movie-details">
-        <h2>Movie Title</h2>
+        <h2></h2>
         <p>Movie Description</p>
         <p>Movie Release Date</p>
         <p>Movie Rating</p>
