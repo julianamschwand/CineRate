@@ -3,7 +3,7 @@ import api from "../api.js"
 export async function getcomments(movieid) {
 	try {
 		const res = await api.get("/getcomments", {
-      movieid
+      params: {movieid}
 		})
 		return res.data
 	} catch (error) {

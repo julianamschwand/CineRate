@@ -17,7 +17,7 @@ export async function addmovie(title, description, poster, playbackid) {
 export async function getmovies(languagecode) {
 	try {
 		const res = await api.get("/getmovies", {
-			languagecode
+			params: {languagecode}
 		})
 		return res.data
 	} catch (error) {
@@ -28,8 +28,10 @@ export async function getmovies(languagecode) {
 export async function getmoviedata(movieid, languagecode) {
 	try {
 		const res = await api.get("/getmoviedata", {
-      movieid,
-			languagecode
+      params: {
+				movieid,
+				languagecode
+			}
 		})
 		return res.data
 	} catch (error) {
