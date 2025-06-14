@@ -3,19 +3,22 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
-
-const { locale, t } = useI18n();
+import {register} from "@/api/routes/userRoutes";
+const { t } = useI18n();
 const router = useRouter();
 const username = ref("");
 const email = ref("");
 const password = ref("");
 
-const handleregister = () => {
-  console.log("Username:", username.value);
-  console.log("Email:", email.value);
-  console.log("Password:", password.value);
+const handleregister = async () => {
+  try {
+    const result = await register(username.value, email.value, password.value);
+    console.log("Registered:", result);
+    router.push("/login");
+  } catch (err) {
+    console.error("Registration failed:", err);
+  }
 };
-
 const RouteToLogin = () => {
   router.push("/login");
 };

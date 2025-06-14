@@ -4,6 +4,8 @@ import { useI18n } from "vue-i18n";
 import { login } from "../api/routes/userRoutes"
 import { ref } from "vue"
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
+const email = ref("");
+const password = ref("");
 
 const router = useRouter();
 const { t } = useI18n();
@@ -12,10 +14,13 @@ const { t } = useI18n();
 const RouteToRegister = () => {
   router.push("/register");
 };
-
+const Routetohome = () => {
+  router.push("/");
+};
 const handleLogin = async () => {
   try {
     const result = await login(email.value, password.value)
+    Routetohome()
   } catch (error) {
     console.log("Error while logging in:", error)
   }

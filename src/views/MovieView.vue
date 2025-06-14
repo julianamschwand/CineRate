@@ -1,59 +1,45 @@
 <script setup>
 import router from "@/router";
+import { useRoute } from "vue-router";
 import { ref, computed, onMounted } from "vue";
+import { getmoviedata } from "@/api/routes/movieRoutes";
+import { addcomment, editcomment } from "@/api/routes/commentRoutes";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 import { useI18n } from "vue-i18n";
-const { t } = useI18n()
+
+// Auth thingi but get rid later cus only cus backend no worky 
+const isLoggedIn = ref(true);
+const isadmin = ref(true);
+const user = ref({ username: "Luca" });
+const currentUserId = ref(1);
+
+const { locale } = useI18n();
+const route = useRoute();
+const movieId = route.params.id;
 
 const openedMenuId = ref(null);
+const title = ref({});
+const description = ref({});
+const playbackid = ref("");
+const poster = ref("");
 const newComment = ref("");
 const menuPosition = ref({ top: 1000, left: 0 });
 const isEditing = ref(false);
 const editingCommentId = ref(null);
-const comments = ref([
-  {
-    CommentId: 1,
-    Content: "Das isch dr best Film wo ich je gseh ha!",
-    fk_UserDataId: 1,
-    fk_MovieId: 1,
-    username: "Luca",
-  },
-  {
-    CommentId: 2,
-    Content: "Ganz okay, aber d’Story het chli lahm gfange.",
-    fk_UserDataId: 2,
-    fk_MovieId: 1,
-    username: "Mira",
-  },
-  {
-    CommentId: 2,
-    Content: "Ganz okay, aber d’Story het chli lahm gfange.",
-    fk_UserDataId: 2,
-    fk_MovieId: 1,
-    username: "",
-  },
-  {
-    CommentId: 3,
-    Content: "Soundtrack 10/10, würd no mal luege!",
-    fk_UserDataId: 3,
-    fk_MovieId: 1,
-    username: "Kevin",
-  },
-  {
-    CommentId: 4,
-    Content: "Mega Kamerafüehrig, aber dä Schluss het mi enttäuscht.",
-    fk_UserDataId: 4,
-    fk_MovieId: 1,
-    username: "Sandra",
-  },
-  {
-    CommentId: 5,
-    Content: "Wägem Hauptcharakter han ich fast abgstellt 😅",
-    fk_UserDataId: 5,
-    fk_MovieId: 1,
-    username: "Joel",
-  },
-]);
+
+const comments = ref([]);
+
+onMounted(async () => {
+  try {
+    const res = await getmoviedata(movieId, locale.value);
+    title.value = res.title;
+    description.value = res.description;
+    poster.value = res.poster;
+    playbackid.value = res.playbackid;
+  } catch (e) {
+    console.error("Error loading movie:", e);
+  }
+});
 
 const RouteToHome = () => {
   router.push("/");
@@ -71,7 +57,7 @@ function toggleMenu(id, event) {
 async function handleCommentSubmit() {
   const trimmed = newComment.value.trim();
   if (!trimmed) return;
-  
+
   if (isEditing.value) {
     const comment = comments.value.find(
       (c) => c.CommentId === editingCommentId.value
@@ -80,7 +66,7 @@ async function handleCommentSubmit() {
       console.warn("Kommentar zum Bearbeiten nicht gefunden.");
       return;
     }
-    
+
     try {
       await editcomment(comment.CommentId, trimmed);
       comment.Content = trimmed;
@@ -88,18 +74,18 @@ async function handleCommentSubmit() {
     } catch (error) {
       console.error("Fehler beim Bearbeiten:", error);
     }
-    
+
     isEditing.value = false;
     editingCommentId.value = null;
   } else {
     try {
-      const response = await addcomment(1, trimmed);
+      const response = await addcomment(movieId, trimmed);
       console.log("addcomment response:", response);
       const createdComment = {
         CommentId: response?.commentid ?? Date.now(),
         Content: trimmed,
         CommentUserId: currentUserId.value,
-        fk_MovieId: 1,
+        fk_MovieId: movieId,
         username: user.value?.username ?? "Unbekannt",
       };
       comments.value.push(createdComment);
@@ -108,13 +94,13 @@ async function handleCommentSubmit() {
       console.error("Fehler beim Erstellen:", error);
     }
   }
-  
+
   newComment.value = "";
 }
 
 const currentComment = computed(() => {
   return comments.value.find((c) => c.CommentId === openedMenuId.value);
-})
+});
 
 function editCommentById(commentId) {
   const comment = comments.value.find((c) => c.CommentId === commentId);
@@ -133,11 +119,8 @@ function deleteComment(commentId) {
   comments.value = comments.value.filter((c) => c.CommentId !== commentId);
   openedMenuId.value = null;
 }
-
-onMounted(async () => {
-  
-});
 </script>
+
 <template>
   <div class="navbar">
     <button class="backbutton" @click="RouteToHome">
@@ -168,7 +151,7 @@ onMounted(async () => {
   <div class="movie-view">
     <div class="movie-trailer">
       <iframe
-        src="https://www.youtube.com/embed/9bZkp7q19f0"
+        :src="`https://www.youtube.com/embed/${playbackid}`"
         title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -177,11 +160,11 @@ onMounted(async () => {
     </div>
     <div class="movie-container">
       <div class="movie-poster">
-        <img src="https://via.placeholder.com/300" alt="Movie Poster" />
+        <img :src="poster" alt="Movie Poster" />
       </div>
       <div class="movie-details">
-        <h4>Movie Title</h4>
-        <p>Movie Description</p>
+        <h4>{{ title[locale.value] }}</h4>
+        <p>{{ description[locale.value] }}</p>
         <p>Movie Release Date</p>
         <p>Movie Rating</p>
       </div>
@@ -189,7 +172,7 @@ onMounted(async () => {
     <div class="comments-section">
       <h3>Comments</h3>
       <ul>
-        <li v-for="(comment, CommentId) in comments" :key="CommentId">
+        <li v-for="comment in comments" :key="comment.CommentId">
           <div class="creativeclassname">
             <strong>{{ comment.username }}:</strong>
             <button

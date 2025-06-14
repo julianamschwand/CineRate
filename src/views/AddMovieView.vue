@@ -3,12 +3,17 @@ import { useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { getlanguages } from "@/api/routes/languageRoutes";
+import { addmovie } from "@/api/routes/movieRoutes";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 
 const router = useRouter();
 const { t } = useI18n();
 const languages = ref([]);
-
+const poster = ref("");
+const title = ref({});
+const description = ref({});
+const playbackid = ref("");
+localStorage.setItem("token", "fake")
 onMounted(async () => {
   try {
     languages.value = await getlanguages();
@@ -17,6 +22,15 @@ onMounted(async () => {
     console.error("Error:", error);
   }
 });
+
+async function handleAddmovie() {
+  try {
+    await addmovie(title.value, description.value, poster.value, playbackid.value);
+    router.push("/");
+  } catch (err) {
+    console.log("Error adding movie:", err);
+  }
+}
 </script>
 
 <template>
@@ -36,30 +50,31 @@ onMounted(async () => {
         <div class="titlecontainer">Title</div>
         <div v-for="l in languages" class="title-input">
           <p>{{ l.LanguageName + ":" }}</p>
-          <input type="text" />
+          <input v-model="title[l.LanguageCode]" type="text"/>
         </div>
       </div>
       <div class="inputcontainer">
         <div class="titlecontainer">Description</div>
         <div v-for="l in languages" class="title-input">
           <p>{{ l.LanguageName + ":" }}</p>
-          <input type="text" />
+          <input v-model="description[l.LanguageCode]" type="text" />
         </div>
       </div>
       <div class="inputcontainer">
         <div class="titlecontainer">PlaybackID</div>
         <div class="title-input">
           <p>PlaybackId:</p>
-          <input type="text" />
+          <input v-model="playbackid" type="text" />
         </div>
       </div>
       <div class="inputcontainer">
         <div class="titlecontainer">Poster</div>
-        <div class="title-input">
+        <div class="title-input" >
           <p>Poster:</p>
-          <input type="text" />
+          <input v-model="poster" type="text" />
         </div>
       </div>
+      <button @click="handleAddmovie">Add Movie</button>
     </div>
   </div>
 </template>
@@ -73,7 +88,16 @@ onMounted(async () => {
   height: 100%;
   padding: 10%;
 }
-
+button {
+  background-color: #8ac379;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 80px;
+}
 .Addmovie-container {
   display: flex;
   justify-content: left;

@@ -16,7 +16,7 @@ const props = defineProps(["movie"]);
         <img src="@/assets/images/icons/ClockIcon.svg" />
         <span>{{ movie.playtime }}</span>
       </div>
-      <h2 id="movie-title">{{ movie.title }}</h2>
+      <h2 id="movie-title">{{ movie.title[$i18n.local] }}</h2>
     </div>
   </div>
 </template>
