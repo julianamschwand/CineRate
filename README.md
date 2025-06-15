@@ -66,23 +66,95 @@ In der Detailansicht eines Films („MovieView“) ist eine übersichtliche Komm
 
 ## Backend
 
-Frag Julius Caesar
+Technologien:
+Wir verwenden MariaDB als Datenbank und Express für die Serverlogik.
+
+Serverlogik:
+Die gesamte Backend-Logik ist in einem separaten Repository namens Cinerate Backend organisiert. Dieses Backend wird über API-Routen mit dem Hauptprojekt verbunden.
+
+API-Routen:
+Alle GET- und POST-Anfragen werden an das Cinerate-Backend weitergeleitet, das im Backend-Repository definiert ist.
 
 ## Datenbankintegrationen
 
-Frag Julius Caesar
+Das Frontend kommuniziert über GET- und POST-Routen mit dem API-Endpunkt, der auf unserem Cinerate-Backend gehostet wird. Darüber erfolgen auch alle Datenbankabfragen.
 
 ## Authentifizierung 
 
-"
+Wir verwenden Passwort-Hashing und Entschlüsselung (Decryption), um die Anmeldedaten sicher zu speichern und zu überprüfen. Da Cinerate eine kostenlose Plattform ohne besonders sensible Daten ist, genügt dieser einfache, aber sichere Ansatz für unsere Zwecke.
 
 ## Mehrsprachigkeit
-### i18n
-Wir haben i18n ausgewählt, aber haben es ohne einer API gemacht. Wir haben i18n so aufgestellt, sodass die Übersetzung in einem Se
+Wir haben i18n als Framework benuzt.
+Eine neue Sprache kann in dem i18n.js File eingetragen werden, man muss einfach jedes Wort was man übersetzten will aufschreiben. Wir haben keine Datenbank benuzt. 
 
 
+# Installation und Setup
+
+- npm install
 
 
+# Benutzerhandbuch
+## Start
+- npm run dev
+- o
+## Screenshots
+HomeView:
+
+LoginView:
+![LoginView](LoginViewPic.png)
+
+RegisterView:
+![RegisterView](RegisterViewPic.png)
+
+MovieView:
+
+AddMovieView: 
+![AddMovieView](AddMovieViewPic.png)
+
+
+## Probleme und Lösungen
+# Herausforderungen
+Eine der größten Herausforderungen bestand darin, Filminformationen in mehreren Sprachen in der Datenbank zu speichern.
+Dies erforderte eine flexible Datenbankstruktur, bei der Titel und Beschreibungen pro Sprache abgelegt werden konnten. Die Lösung bestand darin, die Sprachinhalte als Objekt mit Sprachkennungen zu speichern, um Mehrsprachigkeit effizient zu unterstützen.
+# Bekannte Probleme
+
+# Zusammenfassung und Ausblick
+• Ergebnisse:
+Im Rahmen des Projekts wurden folgende zentrale Funktionen erfolgreich umgesetzt:
+
+Filmtrailer können angesehen werden
+
+Filme können bewertet werden
+
+Bewertungen anderer Benutzer sind sichtbar
+
+Filme können kommentiert werden
+
+Neue Filme lassen sich hinzufügen
+
+Es gibt eine Benutzerhierarchie mit den Rollen: Admin, Moderator und Benutzer
+
+Login- und Registrierungsfunktionen sind implementiert
+
+• Weiterentwicklung:
+Für zukünftige Versionen wären folgende Erweiterungen denkbar:
+
+Such- und Filterfunktionen für Filme
+
+Verbesserte Moderationstools (z. B. Kommentarverwaltung)
+
+Möglichkeit, Benutzerprofile individuell zu gestalten
+
+Favoriten- oder Watchlist-Funktion
+
+E-Mail-Benachrichtigungen bei neuen Kommentaren oder Bewertungen
+
+# Anhang
+
+## Quellcode
+https://github.com/julianamschwand/CineRate.git
+
+## Ressourcen
 
 
 
