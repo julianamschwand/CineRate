@@ -129,6 +129,7 @@ const movies = ref([
     cover: "src/assets/images/movie_covers/s-l400_jpg.png",
   },
 ]);
+
 const SearchQuery = ref("");
 const filteredMovies = computed(() => {
   return movies.value.filter((movie) =>

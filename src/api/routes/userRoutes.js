@@ -93,7 +93,7 @@ export async function edituser(username = null, email = null, password = null) {
 export async function deleteuser(userdataid) {
   try {
     const res = await api.delete("/deleteuser", {
-      userdataid,
+      data: { userdataid }
     });
     return res.data;
   } catch (error) {

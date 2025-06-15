@@ -1,13 +1,11 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
-import { useI18n } from "vue-i18n"; 
 import { getlanguages } from "@/api/routes/languageRoutes";
 import { addmovie } from "@/api/routes/movieRoutes";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 
 const router = useRouter();
-const { locale } = useI18n(); // add later
 const languages = ref([]);
 const poster = ref("");
 const title = ref({});
