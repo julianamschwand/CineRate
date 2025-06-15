@@ -1,23 +1,21 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { useI18n } from "vue-i18n";
-const {locale} = useI18n();
 const router = useRouter();
 
 const props = defineProps(["movie"]);
 </script>
 
 <template>
-  <div id="movie-card" @click="router.push(`/movie/${movie.id}`)">
-    <img :src="movie.cover" id="movie-cover" />
+  <div id="movie-card" @click="router.push(`/movie/${movie.MovieId}`)">
+    <img :src="movie.Poster" id="movie-cover" />
     <div id="movie-info">
       <div id="movie-details">
         <img src="@/assets/images/icons/YearIcon.svg" />
-        <span>{{ movie.year }}</span>
+        <span>{{ movie.ReleaseYear }}</span>
         <img src="@/assets/images/icons/ClockIcon.svg" />
-        <span>{{ movie.playtime }}</span>
+        <span>{{ movie.Duration }}</span>
       </div>
-      <h2 id="movie-title">{{ movie.title[locale] }}</h2>
+      <h2 id="movie-title">{{ movie.Title }}</h2>
     </div>
   </div>
 </template>

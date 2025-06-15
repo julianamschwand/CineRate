@@ -1,5 +1,14 @@
 import api from "../api.js";
 
+export async function isloggedin() {
+  try {
+    const res = await api.get("/isloggedin")
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function userdata() {
   try {
     const res = await api.get("/userdata");
