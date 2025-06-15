@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from "vue-router";
-
+import { useI18n } from "vue-i18n";
+const {locale} = useI18n();
 const router = useRouter();
 
 const props = defineProps(["movie"]);
@@ -16,7 +17,7 @@ const props = defineProps(["movie"]);
         <img src="@/assets/images/icons/ClockIcon.svg" />
         <span>{{ movie.playtime }}</span>
       </div>
-      <h2 id="movie-title">{{ movie.title[$i18n.local] }}</h2>
+      <h2 id="movie-title">{{ movie.title[locale] }}</h2>
     </div>
   </div>
 </template>

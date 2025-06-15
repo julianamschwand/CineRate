@@ -1,13 +1,13 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n"; 
 import { getlanguages } from "@/api/routes/languageRoutes";
 import { addmovie } from "@/api/routes/movieRoutes";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 
 const router = useRouter();
-const { t } = useI18n();
+const { locale } = useI18n(); // add later
 const languages = ref([]);
 const poster = ref("");
 const title = ref({});
@@ -18,6 +18,11 @@ onMounted(async () => {
   try {
     languages.value = await getlanguages();
     languages.value = languages.value.languages;
+
+    for (const i of languages.value) {
+      title.value[i.LanguageCode] = "";
+      description.value[i.LanguageCode] = "";
+    }
   } catch (error) {
     console.error("Error:", error);
   }
@@ -47,7 +52,7 @@ async function handleAddmovie() {
   <div class="Addmovie-container">
     <div class="contentcontainer">
       <div class="inputcontainer">
-        <div class="titlecontainer">Title</div>
+        <div class="titlecontainer">Titel</div>
         <div v-for="l in languages" class="title-input">
           <p>{{ l.LanguageName + ":" }}</p>
           <input v-model="title[l.LanguageCode]" type="text"/>
@@ -96,7 +101,6 @@ button {
   padding: 10px;
   cursor: pointer;
   margin-top: 20px;
-  margin-bottom: 80px;
 }
 .Addmovie-container {
   display: flex;
