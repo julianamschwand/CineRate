@@ -36,7 +36,7 @@ const addMovie = () => {
 
 onMounted(async () => {
   isLoggedIn.value = await isloggedin()
-  if (isLoggedIn?.loggedin) {
+  if (isLoggedIn.value?.loggedin) {
     userData.value = await userdata()
   }
 
