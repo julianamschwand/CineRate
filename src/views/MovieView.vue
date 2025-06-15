@@ -7,39 +7,18 @@ import { addcomment, editcomment } from "@/api/routes/commentRoutes";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 import { useI18n } from "vue-i18n";
 
-// Auth thingi but get rid later cus only cus backend no worky
-const isLoggedIn = ref(true);
-const isadmin = ref(true);
-const user = ref({ username: "Luca" });
-const currentUserId = ref(1);
-
 const { locale } = useI18n();
 const route = useRoute();
 const movieId = route.params.id;
+const movie = ref({})
 
 const openedMenuId = ref(null);
-const title = ref({});
-const description = ref({});
-const playbackid = ref("");
-const poster = ref("");
 const newComment = ref("");
 const menuPosition = ref({ top: 1000, left: 0 });
 const isEditing = ref(false);
 const editingCommentId = ref(null);
 
 const comments = ref([]);
-
-onMounted(async () => {
-	try {
-		const res = await getmoviedata(movieId, locale.value);
-		title.value = res.title;
-		description.value = res.description;
-		poster.value = res.poster;
-		playbackid.value = res.playbackid;
-	} catch (e) {
-		console.error("Error loading movie:", e);
-	}
-});
 
 const RouteToHome = () => {
 	router.push("/");
@@ -119,6 +98,15 @@ function deleteComment(commentId) {
 	comments.value = comments.value.filter((c) => c.CommentId !== commentId);
 	openedMenuId.value = null;
 }
+
+onMounted(async () => {
+  isLoggedIn.value = await isloggedin()
+  if (isLoggedIn.value?.loggedin) {
+    userData.value = await userdata()
+  }
+
+  movie.value = await getmoviedata(movieId, locale.value)
+});
 </script>
 
 <template>
@@ -127,7 +115,7 @@ function deleteComment(commentId) {
 			<img src="@/assets/images/icons/BackIcon.svg" class="back-icon" />
 		</button>
 		<div class="titlecontainer">
-			<h2 class="title">Title</h2>
+			<h2 class="title">{{ movie.movie.Title }}</h2>
 			<div class="rating-section">
 				<div class="rate">
 					<input type="radio" id="star5" name="rate" value="5" />
@@ -159,10 +147,7 @@ function deleteComment(commentId) {
 				<img :src="poster" alt="Movie Poster" />
 			</div>
 			<div class="movie-details">
-				<h4>{{ title[locale.value] }}</h4>
-				<p>{{ description[locale.value] }}</p>
-				<p>Movie Release Date</p>
-				<p>Movie Rating</p>
+        {{ movie.movie.description }}
 			</div>
 		</div>
 		<div class="comments-section">

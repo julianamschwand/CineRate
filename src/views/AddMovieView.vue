@@ -35,7 +35,7 @@ async function handleAddmovie() {
     description.value = Object.fromEntries(Object.entries(description.value).filter(([_, value]) => value.trim() !== ""));
 
     await addmovie(title.value, description.value, posterFile, playbackid.value, releaseyear.value, duration.value);
-    // router.push("/");
+    router.push("/");
   } catch (err) {
     console.log("Error adding movie:", err);
   }
