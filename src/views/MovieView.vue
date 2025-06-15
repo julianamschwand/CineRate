@@ -20,6 +20,7 @@ const editingCommentId = ref(null);
 const movie = ref({})
 const comments = ref([]);
 const user = ref({});
+const apiURL = import.meta.env.VITE_API_URL
 
 const RouteToHome = () => {
   router.push("/");
@@ -50,7 +51,6 @@ async function handleCommentSubmit() {
     try {
       await editcomment(comment.CommentId, trimmed);
       comment.Content = trimmed;
-      console.log("Kommentar erfolgreich im Backend aktualisiert:", comment);
     } catch (error) {
       console.error("Fehler beim Bearbeiten:", error);
     }
@@ -59,16 +59,8 @@ async function handleCommentSubmit() {
     editingCommentId.value = null;
   } else {
     try {
-      const response = await addcomment(movieId, trimmed);
-      console.log("addcomment response:", response);
-      const createdComment = {
-        CommentId: response?.commentid ?? Date.now(),
-        Content: trimmed,
-        CommentUserId: user.value.id,
-        Username: user.value?.username ?? "Unbekannt",
-      };
-      comments.value.push(createdComment);
-      console.log("Kommentar erfolgreich erstellt:", createdComment);
+      await addcomment(movieId, trimmed);
+      handleGetComments()
     } catch (error) {
       console.error("Fehler beim Erstellen:", error);
     }
@@ -103,20 +95,25 @@ async function deleteComment(commentId) {
 	openedMenuId.value = null;
 }
 
-onMounted(async () => {
-
-  isLoggedIn.value = await isloggedin()
-  if (isLoggedIn.value?.loggedin) {
-    user.value = await userdata();
-  }
-  const moviedatares = await getmoviedata(movieId, locale.value);
-  console.log("yey",moviedatares)
+async function handleGetComments() {
   const commentResponse = await getcomments(movieId);
   if (commentResponse?.comments) {
     comments.value = commentResponse.comments;
   } else {
     comments.value = [];
   }
+}
+
+onMounted(async () => {
+  isLoggedIn.value = await isloggedin()
+  if (isLoggedIn.value?.loggedin) {
+    user.value = await userdata();
+  }
+
+  const movieres = await getmoviedata(movieId, locale.value);
+  movie.value = movieres.movie
+
+  handleGetComments()
 });
 </script>
 <template>
@@ -151,13 +148,10 @@ onMounted(async () => {
     </div>
     <div class="movie-container">
       <div class="movie-poster">
-        <img :src="poster" alt="Movie Poster" />
+        <img :src="apiURL + poster" alt="Movie Poster" />
       </div>
       <div class="movie-details">
-        <h4>{{ movie.title }}</h4>
-        <p>{{ movie.description }}</p>
-        <p>Movie Release Date</p>
-        <p>Movie Rating</p>
+        <span>Rating:</span>
       </div>
     </div>
     <div class="comments-section">
@@ -195,7 +189,7 @@ onMounted(async () => {
             Delete
           </button>
           <button v-if="currentComment?.CommentUserId === user.id"
-            @click="() => editCommentById(currentComment?.CommentId)" class="edit-comment-button">
+            @click="editCommentById(currentComment?.CommentId)" class="edit-comment-button">
             <svg class="edit-icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round"
               stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20"
               xmlns="http://www.w3.org/2000/svg">

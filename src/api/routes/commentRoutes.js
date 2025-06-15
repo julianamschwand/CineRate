@@ -42,7 +42,6 @@ export async function deletecomment(commentid) {
 		});
 		return res.data;
 	} catch (error) {
-		console.error("Fehler beim Löschen des Kommentars:", error);
-		throw error;
+		console.error("Error:", error);
 	}
 }
