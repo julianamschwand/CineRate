@@ -37,7 +37,7 @@ export async function editcomment(commentid, content) {
 
 export async function deletecomment(commentid) {
 	try {
-		const res = await api.get("/deletecomment", {
+		const res = await api.delete("/deletecomment", {
       data: { commentid }
 		})
 		return res.data

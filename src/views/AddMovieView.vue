@@ -7,11 +7,13 @@ import LanguageDropdown from "@/components/LanguageDropdown.vue";
 
 const router = useRouter();
 const languages = ref([]);
-const poster = ref("");
+const poster = ref(null);
 const title = ref({});
 const description = ref({});
 const playbackid = ref("");
-localStorage.setItem("token", "fake")
+const releaseyear = ref("")
+const duration = ref("")
+
 onMounted(async () => {
   try {
     languages.value = await getlanguages();
@@ -28,8 +30,12 @@ onMounted(async () => {
 
 async function handleAddmovie() {
   try {
-    await addmovie(title.value, description.value, poster.value, playbackid.value);
-    router.push("/");
+    const posterFile = poster.value.files[0] 
+    title.value = Object.fromEntries(Object.entries(title.value).filter(([_, value]) => value.trim() !== ""));
+    description.value = Object.fromEntries(Object.entries(description.value).filter(([_, value]) => value.trim() !== ""));
+
+    await addmovie(title.value, description.value, posterFile, playbackid.value, releaseyear.value, duration.value);
+    // router.push("/");
   } catch (err) {
     console.log("Error adding movie:", err);
   }
@@ -37,12 +43,11 @@ async function handleAddmovie() {
 </script>
 
 <template>
-  <div class="navbar">
+  <div class="navbar" @click="$router.push('/')">
     <button class="backbutton">
       <img
         src="@/assets/images/icons/BackIcon.svg"
         id="back-icon"
-        @click="$router.push('/')"
       />
     </button>
     <LanguageDropdown />
@@ -71,13 +76,27 @@ async function handleAddmovie() {
         </div>
       </div>
       <div class="inputcontainer">
+        <div class="titlecontainer">Release year</div>
+        <div class="title-input">
+          <p>Release year:</p>
+          <input v-model="releaseyear" type="text" />
+        </div>
+      </div>
+      <div class="inputcontainer">
+        <div class="titlecontainer">Duration (in Min.)</div>
+        <div class="title-input">
+          <p>Duration:</p>
+          <input v-model="duration" type="text" />
+        </div>
+      </div>
+      <div class="inputcontainer">
         <div class="titlecontainer">Poster</div>
         <div class="title-input" >
           <p>Poster:</p>
-          <input v-model="poster" type="text" />
+          <input type="file" ref="poster" />
         </div>
       </div>
-      <button @click="handleAddmovie">Add Movie</button>
+      <button class="submit-button" @click.prevent="handleAddmovie">Add Movie</button>
     </div>
   </div>
 </template>
@@ -104,7 +123,7 @@ button {
   display: flex;
   justify-content: left;
   align-items: left;
-  height: 100vh;
+  height: 100%;
 }
 
 .titlecontainer {
@@ -148,5 +167,9 @@ input {
   color: white;
   padding: 10px;
   padding-right: 25px;
+}
+
+.submit-button {
+  color:#20242a;
 }
 </style>
