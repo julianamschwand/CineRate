@@ -12,9 +12,8 @@ const password = ref("");
 
 const handleregister = async () => {
 	try {
-		const result = await register(username.value, email.value, password.value);
-		console.log("Registered:", result);
-		router.push("/login");
+		await register(username.value, email.value, password.value);
+		router.push("/");
 	} catch (err) {
 		console.error("Registration failed:", err);
 	}
