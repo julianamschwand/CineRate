@@ -1,5 +1,14 @@
 import api from "../api.js";
 
+export async function isloggedin() {
+  try {
+    const res = await api.get("/isloggedin")
+    return res.data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 export async function userdata() {
   try {
     const res = await api.get("/userdata");
@@ -93,7 +102,7 @@ export async function edituser(username = null, email = null, password = null) {
 export async function deleteuser(userdataid) {
   try {
     const res = await api.delete("/deleteuser", {
-      userdataid,
+      data: { userdataid }
     });
     return res.data;
   } catch (error) {

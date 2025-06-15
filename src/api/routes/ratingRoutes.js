@@ -3,7 +3,7 @@ import api from "../api.js"
 export async function getrating(movieid) {
 	try {
 		const res = await api.get("/getrating", {
-      movieid
+      params: { movieid }
 		})
 		return res.data
 	} catch (error) {

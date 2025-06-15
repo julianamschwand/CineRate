@@ -1,12 +1,19 @@
 import api from "../api.js"
 
-export async function addmovie(title, description, poster, playbackid) {
+export async function addmovie(title, description, poster, playbackid, releaseyear, duration) {
 	try {
-		const res = await api.post("/addmovie", {
-			title,
-      description,
-      poster,
-      playbackid
+		const formData = new FormData()
+		formData.append("title", JSON.stringify(title))
+		formData.append("description", JSON.stringify(description))
+		formData.append("poster", poster)
+		formData.append("playbackid", playbackid)
+		formData.append("duration", duration)
+		formData.append("releaseyear", releaseyear)
+
+		const res = await api.post("/addmovie", formData, {
+			headers: {
+        "Content-Type": "multipart/form-data",
+      }
 		})
 		return res.data
 	} catch (error) {
@@ -17,7 +24,7 @@ export async function addmovie(title, description, poster, playbackid) {
 export async function getmovies(languagecode) {
 	try {
 		const res = await api.get("/getmovies", {
-			languagecode
+			params: { languagecode }
 		})
 		return res.data
 	} catch (error) {
@@ -28,8 +35,10 @@ export async function getmovies(languagecode) {
 export async function getmoviedata(movieid, languagecode) {
 	try {
 		const res = await api.get("/getmoviedata", {
-      movieid,
-			languagecode
+       params: { 
+				movieid,
+				languagecode 
+		}
 		})
 		return res.data
 	} catch (error) {
@@ -40,7 +49,7 @@ export async function getmoviedata(movieid, languagecode) {
 export async function getallmoviedata(movieid) {
 	try {
 		const res = await api.get("/getallmoviedata", {
-      movieid
+      params: { movieid }
 		})
 		return res.data
 	} catch (error) {
@@ -66,7 +75,7 @@ export async function editmovie(movieid, title = null, description = null, poste
 export async function deletemovie(movieid) {
 	try {
 		const res = await api.delete("/deletemovie", {
-      movieid
+      data: { movieid }
 		})
 		return res.data
 	} catch (error) {
