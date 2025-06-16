@@ -35,10 +35,10 @@ export async function getmovies(languagecode) {
 export async function getmoviedata(movieid, languagecode) {
 	try {
 		const res = await api.get("/getmoviedata", {
-       params: { 
+      params: {
 				movieid,
-				languagecode 
-		}
+				languagecode
+			}
 		})
 		return res.data
 	} catch (error) {
