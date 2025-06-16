@@ -154,7 +154,7 @@ onMounted(async () => {
           Rating:
         </div>
         <div class="movie-details">
-
+          {{ movie.MovieDescription }}
         </div>
       </div>
     </div>
@@ -173,7 +173,7 @@ onMounted(async () => {
         </li>
       </ul>
 
-      <textarea v-model="newComment" placeholder="Add a comment" :disabled="!isLoggedIn"></textarea>
+      <textarea v-model="newComment" placeholder="Add a comment" :disabled="!isLoggedIn" class="comment-input"></textarea>
       <button @click="handleCommentSubmit" :disabled="!isLoggedIn" class="submit-button">
         {{ isEditing ? "Update" : "Submit" }}
       </button>
@@ -215,7 +215,7 @@ onMounted(async () => {
   width: 100%;
   max-width: 80%;
   margin: 0 auto;
-  padding: 20px;
+  margin-top: 20px;
   box-sizing: border-box;
 }
 
@@ -311,6 +311,7 @@ onMounted(async () => {
   font-weight: bold;
   box-sizing: border-box;
   margin-bottom: 20px;
+  height: 50px;
 }
 
 .movie-details {
@@ -318,7 +319,7 @@ onMounted(async () => {
   padding: 20px;
   border-radius: 10px;
   box-sizing: border-box;
-  height: 100%;
+  height: 250px;
 }
 
 .comments-section {
@@ -393,19 +394,25 @@ li {
   align-items: flex-start;
 }
 
-.comments-section textarea {
+.comment-input{
   flex: 1;
   height: 80px;
   border-radius: 5px;
   padding: 10px;
-  border: 1px solid #282c34;
+  border: 2px solid #8ac379;
+  background-color: #20242a;
+  color: white;
   resize: vertical;
   font-family: inherit;
 }
 
+.comment-input:focus {
+  outline: none;
+}
+
 .submit-button {
   background-color: #8ac379;
-  color: white;
+  color: #20242a;
   border: none;
   width: 10%;
   height: 10%;

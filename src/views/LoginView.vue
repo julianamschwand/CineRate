@@ -4,6 +4,7 @@ import { useI18n } from "vue-i18n";
 import { login } from "../api/routes/userRoutes";
 import { ref } from "vue";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
+
 const email = ref("");
 const password = ref("");
 

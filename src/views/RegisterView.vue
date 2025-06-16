@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 import { register } from "@/api/routes/userRoutes";
-const { t } = useI18n();
+const { locale, t } = useI18n();
 const router = useRouter();
 const username = ref("");
 const email = ref("");
@@ -12,7 +12,7 @@ const password = ref("");
 
 const handleregister = async () => {
 	try {
-		await register(username.value, email.value, password.value);
+		await register(username.value, email.value, password.value, locale.value);
 		router.push("/");
 	} catch (err) {
 		console.error("Registration failed:", err);

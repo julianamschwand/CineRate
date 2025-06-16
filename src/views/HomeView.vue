@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { useI18n } from "vue-i18n";
 import { userdata, isloggedin } from "@/api/routes/userRoutes.js";
-import { getmoviedata, getmovies } from "@/api/routes/movieRoutes";
+import { getmovies } from "@/api/routes/movieRoutes";
 import { useRouter } from "vue-router"
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 const { locale, t } = useI18n();

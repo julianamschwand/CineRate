@@ -19,12 +19,13 @@ export async function userdata() {
   }
 }
 
-export async function register(username, email, password) {
+export async function register(username, email, password, selectedlanguage) {
   try {
     const res = await api.post("/register", {
       username,
       email,
       password,
+      selectedlanguage
     });
     return res.data;
   } catch (error) {
