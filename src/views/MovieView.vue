@@ -108,9 +108,9 @@ onMounted(async () => {
   isLoggedIn.value = await isloggedin()
   if (isLoggedIn.value?.loggedin) {
     user.value = await userdata();
-    locale.value = user.selectedlanguage
+    locale.value = user.value.selectedlanguage
   }
-
+  
   const movieres = await getmoviedata(movieId, locale.value);
   movie.value = movieres.movie
 
@@ -123,7 +123,7 @@ onMounted(async () => {
       <img src="@/assets/images/icons/BackIcon.svg" class="back-icon" />
     </button>
     <div class="titlecontainer">
-      <h2 class="title">{{  }}</h2>
+      <h2 class="title">{{ movie.Title }}</h2>
       <div class="rating-section">
         <div class="rate">
           <input type="radio" id="star5" name="rate" value="5" />
@@ -143,16 +143,19 @@ onMounted(async () => {
   </div>
   <div class="movie-view">
     <div class="movie-trailer">
-      <iframe :src="`https://www.youtube.com/embed/${playbackid}`" title="YouTube video player" frameborder="0"
+      <iframe :src="`https://www.youtube.com/embed/${movie.PlaybackId}`" title="YouTube video player" frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen></iframe>
     </div>
     <div class="movie-container">
-      <div class="movie-poster">
-        <img :src="apiURL + poster" alt="Movie Poster" />
-      </div>
-      <div class="movie-details">
-        <span>Rating:</span>
+      <img :src="apiURL + movie.Poster" alt="Movie Poster" class="movie-poster"/>
+      <div class="movie-details-container">
+        <div class="movie-rating">
+          Rating:
+        </div>
+        <div class="movie-details">
+
+        </div>
       </div>
     </div>
     <div class="comments-section">
@@ -280,22 +283,42 @@ onMounted(async () => {
   display: flex;
   width: 100%;
   margin-top: 20px;
+  height: 320px;
 }
 
 .movie-poster {
-  width: 300px;
-  height: 450px;
-  background-color: #20242a;
+  height: 100%;
+  box-sizing: border-box;
   border-radius: 10px;
-  overflow: hidden;
   margin-right: 20px;
+  width: auto;
+  display: inline-block;
+}
+
+.movie-details-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: white;
+  width: 100%;
+}
+
+.movie-rating {
+  background-color: #20242a;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-sizing: border-box;
+  margin-bottom: 20px;
 }
 
 .movie-details {
-  width: 100%;
-  padding: 20px;
   background-color: #20242a;
+  padding: 20px;
   border-radius: 10px;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 .comments-section {
@@ -502,5 +525,17 @@ li {
 
 #home-button:hover {
   filter: brightness(1.1);
+}
+
+.movie-trailer {
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.movie-trailer iframe {
+  height: 350px;
+  width: 100%;
+  display: block;
 }
 </style>

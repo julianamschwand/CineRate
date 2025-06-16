@@ -134,7 +134,7 @@ const messages = {
       submit: "Invia",
     },    
   },
-  sp: {
+  es: {
     movies: {
       "Avengers: Infinity War": "Avengers: Infinity War",
       "Avengers: Endgame": "Avengers: Endgame",

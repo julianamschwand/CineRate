@@ -40,7 +40,7 @@ const changeLanguage = async (lang) => {
           <div class="dropdown-option" @click="changeLanguage('it')">
             Italiano 🇮🇹
           </div>
-          <div class="dropdown-option" @click="changeLanguage('sp')">
+          <div class="dropdown-option" @click="changeLanguage('es')">
             Español 🇪🇸
           </div>
           <div class="dropdown-option" @click="changeLanguage('zh')">
