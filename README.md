@@ -2,14 +2,15 @@
 
 ## Inhaltsverzeichnis
 
-1. [Einleitung](#einleitung)
-2. [Datenbankdesign](#datenbankdesign)
-3. [Implementierung, technische Details, Architektur](#implemetierung)
-4. [Installation und Setup](#installation)
-5. [Benutzerhandbuch](#benutzerhandbuch)
-6. [Pobleme und Lösungen](#probleme)
-7. [Zusammenfassung und Ausblick](#zusammenfassung)
-8. [Anhang](#anhang)
+1. [Einleitung](#einleitung)  
+2. [Datenbankdesign](#datenbankdesign)  
+3. [Implementierung, technische Details, Architektur](#implementierung-technische-details-architektur)  
+4. [Installation und Setup](#installation-und-setup)  
+5. [Benutzerhandbuch](#benutzerhandbuch)  
+6. [Probleme und Lösungen](#probleme-und-lösungen)  
+7. [Zusammenfassung und Ausblick](#zusammenfassung-und-ausblick)  
+8. [Anhang](#anhang)  
+
 
 
 # Einleiting
@@ -27,7 +28,7 @@ o	Unter Filme kommentieren,
 o	Kommentare löschen,
 o	Kommentare bearbeiten,
 o	Filmrating bearbeiten ^
-###
+### <!-- Für abstand -->
 
 - 	Für Mods
 o	Alle Funktionen wie Benutzer,
@@ -39,15 +40,60 @@ o	Für Admins
 o	Alle Funktionen wie Mods,
 o	Andere Benutzer zu Admins oder Mods machen,
 o	Filme Hinzufügen
-###
+### <!-- Für abstand -->
 -	Kunde wollte von Design her:
-o	Gleichmässige NAVBAR
+o	Gleichmässige NAVBAR<
 o	Filme können auf Desktop / Handy gleich gut sehen
 o	Konsistenter Aufbau vom Design / Farben
 o	Gut ansehbare Farben und einfache Login
 
 # Datenbankdesign
-Frag Julius Ceasar
+## Datenbankstruktur
+### Tabelle: UserData
+Spalte	Datentyp	Beschreibung
+UserDataId	int (PK)	Primärschlüssel, automatisch inkrementierend
+Username	varchar(30)	Eindeutiger Benutzername
+Email	varchar(50)	Eindeutige E-Mail-Adresse
+UserPassword	char(60)	Passwort (z. B. gehashter String)
+UserRole	enum	Rolle des Users: admin, mod, user (Standard: user)
+SelectedLanguage char(2) 
+
+### Tabelle: Movies
+Spalte	Datentyp	Beschreibung
+MovieId	int (PK)	Primärschlüssel
+PlaybackId	char(11)	Eindeutige ID für z. B. YouTube
+ReleaseYear	int	Erscheinungsjahr
+Duration	int	Dauer in Minuten
+Poster	text	Pfad oder URL zum Poster
+
+### Tabelle: Languages
+Spalte	Datentyp	Beschreibung
+LanguageId	int (PK)	Primärschlüssel
+LanguageCode	char(2)	Sprachcode (z. B. 'de', 'en')
+LanguageName	varchar(30)	Name der Sprache
+
+### Tabelle: MovieTranslations
+Spalte	Datentyp	Beschreibung
+MovieTranslationId	int (PK)	Primärschlüssel
+Title	varchar(100)	Titel in spezifischer Sprache
+MovieDescription	text	Beschreibung in spezifischer Sprache
+fk_MovieId	int (FK)	Fremdschlüssel zu Movies (Löscht sich mit dem Film)
+fk_LanguageId	int (FK)	Fremdschlüssel zu Languages (Löscht sich mit der Sprache)
+
+### Tabelle: Comments
+Spalte	Datentyp	Beschreibung
+CommentId	int (PK)	Primärschlüssel
+Content	text	Kommentarinhalt
+fk_UserDataId	int (FK)	Fremdschlüssel zu UserData (löscht sich bei User)
+fk_MovieId	int (FK)	Fremdschlüssel zu Movies (löscht sich bei Film)
+
+### Tabelle: Ratings
+Spalte	Datentyp	Beschreibung
+RatingId	int (PK)	Primärschlüssel
+RatingValue	int	Bewertungswert (z. B. 1–5)
+fk_UserDataId	int (FK)	Fremdschlüssel zu UserData (löscht sich bei User)
+fk_MovieId	int (FK)	Fremdschlüssel zu Movies (löscht sich bei Film)
+
 
 # Implementierung, technische Details, Architektur
 
@@ -112,14 +158,17 @@ AddMovieView:
 ![AddMovieView](AddMovieViewPic.png)
 
 
-## Probleme und Lösungen
-# Herausforderungen
+# Probleme und Lösungen
+## Herausforderungen
 Eine der größten Herausforderungen bestand darin, Filminformationen in mehreren Sprachen in der Datenbank zu speichern.
 Dies erforderte eine flexible Datenbankstruktur, bei der Titel und Beschreibungen pro Sprache abgelegt werden konnten. Die Lösung bestand darin, die Sprachinhalte als Objekt mit Sprachkennungen zu speichern, um Mehrsprachigkeit effizient zu unterstützen.
-# Bekannte Probleme
+## Bekannte Probleme
+- Keine Moviecards vorhanden
+- 
+
 
 # Zusammenfassung und Ausblick
-• Ergebnisse:
+### Ergebnisse:
 Im Rahmen des Projekts wurden folgende zentrale Funktionen erfolgreich umgesetzt:
 
 Filmtrailer können angesehen werden
@@ -136,7 +185,7 @@ Es gibt eine Benutzerhierarchie mit den Rollen: Admin, Moderator und Benutzer
 
 Login- und Registrierungsfunktionen sind implementiert
 
-• Weiterentwicklung:
+### Weiterentwicklung:
 Für zukünftige Versionen wären folgende Erweiterungen denkbar:
 
 Such- und Filterfunktionen für Filme
@@ -154,29 +203,34 @@ E-Mail-Benachrichtigungen bei neuen Kommentaren oder Bewertungen
 ## Quellcode
 https://github.com/julianamschwand/CineRate.git
 
-## Ressourcen
+### 🔧 Frontend – verwendete Bibliotheken und Tools
+Bibliothek / Tool	Version	Beschreibung
+vue	^3.5.13	Hauptframework zur Erstellung des Frontends
+vue-router	^4.5.0	Routing innerhalb der Vue-Anwendung
+vue-i18n	^11.1.3	Mehrsprachigkeit / Internationalisierung
+i18next-browser-languagedetector	^8.0.4	Automatische Spracherkennung
+axios	^1.9.0	HTTP-Client für API-Aufrufe
+dotenv	^16.5.0	Umgebungsvariablenverwaltung
 
+Dev-Dependencies (nur zur Entwicklungszeit):
 
+Tool	Version	Beschreibung
+vite	^6.1.0	Build-Tool zur schnellen Entwicklung
+@vitejs/plugin-vue	^5.2.3	Vue-Plugin für Vite
+vite-plugin-vue-devtools	^7.7.2	Entwicklertools für Vue
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### ⚙️ Backend – verwendete Bibliotheken und Tools
+Bibliothek / Tool	Version	Beschreibung
+express	^4.21.2	Webserver-Framework für Node.js
+mysql / mysql2	^2.18.1 / ^3.14.0	Verbindung zur Datenbank
+express-session	^1.18.1	Sitzungsverwaltung im Backend
+express-mysql-session	^3.0.3	MySQL-basierter Session-Speicher
+bcrypt	^5.1.1	Passwort-Hashing zur sicheren Authentifizierung
+cors	^2.8.5	Cross-Origin Resource Sharing
+dotenv	^16.5.0	Verwaltung von Umgebungsvariablen
+multer	^2.0.1	Middleware zur Datei-Upload-Verarbeitung
+path	^0.12.7	Pfadverwaltung in Node.js
+nodemon	^3.1.9	automatischer Server-Neustart bei Codeänderungen
 
 
 
