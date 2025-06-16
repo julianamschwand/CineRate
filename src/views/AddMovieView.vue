@@ -50,7 +50,6 @@ async function handleAddmovie() {
         id="back-icon"
       />
     </button>
-    <LanguageDropdown />
   </div>
   <div class="Addmovie-container">
     <div class="contentcontainer">

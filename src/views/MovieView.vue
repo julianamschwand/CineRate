@@ -108,6 +108,7 @@ onMounted(async () => {
   isLoggedIn.value = await isloggedin()
   if (isLoggedIn.value?.loggedin) {
     user.value = await userdata();
+    locale.value = user.selectedlanguage
   }
 
   const movieres = await getmoviedata(movieId, locale.value);

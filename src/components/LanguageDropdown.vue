@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { useI18n } from "vue-i18n";
+import { changeselectedlanguage, userdata } from "@/api/routes/userRoutes.js";
+import { isloggedin } from "@/api/routes/userRoutes.js";
 const { locale } = useI18n();
 
 const isDropdownVisible = ref(false);
@@ -16,9 +18,11 @@ const toggleDropdown = () => {
   }
 };
 
-const changeLanguage = (lang) => {
+const changeLanguage = async (lang) => {
   locale.value = lang;
   toggleDropdown();
+  await changeselectedlanguage(lang)
+  window.location.reload()
 };
 </script>
 <template>

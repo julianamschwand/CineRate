@@ -109,3 +109,14 @@ export async function deleteuser(userdataid) {
     console.error("Error:", error);
   }
 }
+
+export async function changeselectedlanguage(languagecode) {
+  try {
+    const res = await api.post("/changeselectedlanguage", {
+      languagecode
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
