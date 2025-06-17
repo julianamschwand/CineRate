@@ -7,6 +7,7 @@ import { addcomment, editcomment, deletecomment, getcomments } from "@/api/route
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 import { useI18n } from "vue-i18n";
 import { isloggedin, userdata } from "@/api/routes/userRoutes";
+import { getrating, rate, getuserrating } from "@/api/routes/ratingRoutes";
 
 const { locale } = useI18n();
 const route = useRoute();
@@ -20,6 +21,8 @@ const editingCommentId = ref(null);
 const movie = ref({})
 const comments = ref([]);
 const user = ref({});
+const rating = ref({})
+const selectedrating = ref(0)
 const apiURL = import.meta.env.VITE_API_URL
 
 const RouteToHome = () => {
@@ -33,6 +36,11 @@ function toggleMenu(id, event) {
     top: rect.bottom + window.scrollY + 8,
     left: rect.left + window.scrollX + 50,
   };
+}
+
+async function submitRating() {
+  await rate(movieId, selectedrating.value)
+  rating.value = await getrating(movieId)
 }
 
 async function handleCommentSubmit() {
@@ -102,17 +110,22 @@ async function handleGetComments() {
   } else {
     comments.value = [];
   }
-}
+} 
 
 onMounted(async () => {
   isLoggedIn.value = await isloggedin()
   if (isLoggedIn.value?.loggedin) {
     user.value = await userdata();
     locale.value = user.value.selectedlanguage
+
+    const userratingres = await getuserrating(movieId)
+    selectedrating.value = userratingres.rating
   }
   
   const movieres = await getmoviedata(movieId, locale.value);
   movie.value = movieres.movie
+
+  rating.value = await getrating(movieId)
 
   handleGetComments()
 });
@@ -126,15 +139,15 @@ onMounted(async () => {
       <h2 class="title">{{ movie.Title }}</h2>
       <div class="rating-section">
         <div class="rate">
-          <input type="radio" id="star5" name="rate" value="5" />
+          <input type="radio" id="star5" name="rate" value="5" v-model="selectedrating" @change="submitRating"/>
           <label for="star5" title="text">5 stars</label>
-          <input type="radio" id="star4" name="rate" value="4" />
+          <input type="radio" id="star4" name="rate" value="4" v-model="selectedrating" @change="submitRating"/>
           <label for="star4" title="text">4 stars</label>
-          <input type="radio" id="star3" name="rate" value="3" />
+          <input type="radio" id="star3" name="rate" value="3" v-model="selectedrating" @change="submitRating"/>
           <label for="star3" title="text">3 stars</label>
-          <input type="radio" id="star2" name="rate" value="2" />
+          <input type="radio" id="star2" name="rate" value="2" v-model="selectedrating" @change="submitRating"/>
           <label for="star2" title="text">2 stars</label>
-          <input type="radio" id="star1" name="rate" value="1" />
+          <input type="radio" id="star1" name="rate" value="1" v-model="selectedrating" @change="submitRating"/>
           <label for="star1" title="text">1 star</label>
         </div>
       </div>
@@ -151,7 +164,8 @@ onMounted(async () => {
       <img :src="apiURL + movie.Poster" alt="Movie Poster" class="movie-poster"/>
       <div class="movie-details-container">
         <div class="movie-rating">
-          Rating:
+          <span class="rating-star">★</span>
+          <span>{{ rating.rating == "No rating" ? rating.rating : "Rating: " + rating.rating}}</span>
         </div>
         <div class="movie-details">
           {{ movie.MovieDescription }}
@@ -312,6 +326,12 @@ onMounted(async () => {
   box-sizing: border-box;
   margin-bottom: 20px;
   height: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rating-star {
+  color: #ffc700;
 }
 
 .movie-details {

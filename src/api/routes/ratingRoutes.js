@@ -11,6 +11,17 @@ export async function getrating(movieid) {
 	}
 }
 
+export async function getuserrating(movieid) {
+	try {
+		const res = await api.get("/getuserrating", {
+      params: { movieid }
+		})
+		return res.data
+	} catch (error) {
+		console.error("Error:", error)
+	}
+}
+
 export async function rate(movieid, rating) {
 	try {
 		const res = await api.post("/rate", {
