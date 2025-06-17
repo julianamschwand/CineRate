@@ -81,6 +81,14 @@ const currentComment = computed(() => {
   return comments.value.find((c) => c.CommentId === openedMenuId.value);
 });
 
+const handleDeleteMovie = async () => {
+  try {
+    await deletemovie(movieId);
+    router.push("/");
+  } catch (err) {
+    console.error("Error deleting movie:", err);
+  }
+};
 function editCommentById(commentId) {
   const comment = comments.value.find((c) => c.CommentId === commentId);
   if (!comment) {
@@ -172,6 +180,10 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+    <div v-if="user.role === 'admin'|| user.role ==='mod'"class="admin-controls">
+          <button @click="handleEditMovie">Edit Movie</button>
+          <button @click="handleDeleteMovie">Delete Movie</button>
+        </div>
     <div class="comments-section">
       <h3>Comments</h3>
       <ul>
@@ -206,6 +218,8 @@ onMounted(async () => {
             </svg>
             Delete
           </button>
+          </li>
+          <li>
           <button v-if="currentComment?.CommentUserId === user.id"
             @click="editCommentById(currentComment?.CommentId)" class="edit-comment-button">
             <svg class="edit-icon" fill="none" height="20" stroke="currentColor" stroke-linecap="round"
