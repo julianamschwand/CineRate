@@ -168,7 +168,7 @@ onMounted(async () => {
           <span>{{ rating.rating == "No rating" ? rating.rating : "Rating: " + rating.rating}}</span>
         </div>
         <div class="movie-details">
-          {{ movie.MovieDescription }}
+          {{ movie.Description }}
         </div>
       </div>
     </div>
