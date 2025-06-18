@@ -4,7 +4,7 @@ import LoginView from "../views/LoginView.vue";
 import MovieView from "../views/MovieView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import AddMovieView from "../views/AddMovieView.vue";
-
+import AdminPanelView from "../views/AdminPanelView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -32,6 +32,11 @@ const router = createRouter({
       path: "/addmovie",
       name: "addmovie",
       component: AddMovieView,
+    },
+    {
+      path: '/admin',
+      name: 'AdminPanel',
+      component: AdminPanelView,
     },
     {
       path: "/editmovie/:id",

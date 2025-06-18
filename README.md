@@ -145,6 +145,7 @@ Eine neue Sprache kann in dem i18n.js File eingetragen werden, man muss einfach 
 - o
 ## Screenshots
 HomeView:
+![HomeView](HomeViewPic.png)
 
 LoginView:
 ![LoginView](LoginViewPic.png)
@@ -153,6 +154,7 @@ RegisterView:
 ![RegisterView](RegisterViewPic.png)
 
 MovieView:
+![MovieView](MovieViewPic.png)
 
 AddMovieView: 
 ![AddMovieView](AddMovieViewPic.png)

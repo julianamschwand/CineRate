@@ -10,8 +10,7 @@ const { locale, t } = useI18n();
 
 const movies = ref([]);
 const userData = ref({})
-const isLoggedIn = ref({})
-
+const isLoggedIn = ref(false)
 const SearchQuery = ref("");
 const filteredMovies = computed(() => {
   const movieArray = movies.value?.movies ?? []
@@ -33,11 +32,21 @@ const toggleLogin = () => {
 const addMovie = () => {
   router.push("/addmovie");
 };
-
+const goToAdminPanel = () => {
+  router.push("/admin");
+};
 onMounted(async () => {
-  isLoggedIn.value = await isloggedin()
+  //isLoggedIn.value = await isloggedin()
+  isLoggedIn.value = {loggedin:true}
   if (isLoggedIn.value?.loggedin) {
-    userData.value = await userdata()
+    //userData.value = await userdata()
+    userData.value = {
+    id: 1,
+    username: "urmom",
+    email: "j.amschwand@hotmail.com",
+    role: "admin",
+    selectedlanguage: "en"
+  }
     locale.value = userData.value.selectedlanguage
   }
 
@@ -46,10 +55,20 @@ onMounted(async () => {
 </script>
 <template>
   <div class="navbar">
-    <button v-if="userData.role == 'admin' || userData.role == 'mod'" id="add-button" @click="addMovie">
+    <div class="admin-controls">
+      <button v-if="userData.role == 'admin' || userData.role == 'mod'" id="add-button" @click="addMovie">
       <img src="@/assets/images/icons/PlusIcon.svg" id="add-button-plus" />
       {{ t("buttons.addMovie") }}
     </button>
+    <button
+  v-if="userData.role === 'admin'"
+  id="add-button"
+  @click="goToAdminPanel"
+>
+  Admin Panel
+</button>
+    </div>
+    
     <div id="search-bar-container">
       <img src="@/assets/images/icons/SearchIcon.svg" id="search-icon" />
       <input
@@ -95,8 +114,12 @@ body {
   color: #20242a;
   height: 50px;
   font-weight: bold;
+  gap: 10px ;
 }
-
+.admin-controls{
+  display: flex;
+  gap: 10px ;
+}
 #add-button-plus {
   height: 17px;
   margin-right: 5px;
@@ -164,6 +187,19 @@ body {
 div h1 {
   color: white;
 }
-
-
+.admin-panel-button {
+  background-color: #f39c12;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  margin-left: 10px;
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
 </style>
