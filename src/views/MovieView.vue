@@ -2,7 +2,7 @@
 import router from "@/router";
 import { useRoute } from "vue-router";
 import { ref, computed, onMounted } from "vue";
-import { getmoviedata } from "@/api/routes/movieRoutes";
+import { getmoviedata, deletemovie } from "@/api/routes/movieRoutes";
 import { addcomment, editcomment, deletecomment, getcomments } from "@/api/routes/commentRoutes";
 import LanguageDropdown from "@/components/LanguageDropdown.vue";
 import { useI18n } from "vue-i18n";
@@ -30,7 +30,11 @@ const RouteToHome = () => {
 };
 
 function toggleMenu(id, event) {
-  openedMenuId.value = id;
+  if (openedMenuId.value) {
+    openedMenuId.value = null;
+  } else {
+    openedMenuId.value = id;
+  }
   const rect = event.currentTarget.getBoundingClientRect();
   menuPosition.value = {
     top: rect.bottom + window.scrollY + 8,
@@ -89,6 +93,7 @@ const handleDeleteMovie = async () => {
     console.error("Error deleting movie:", err);
   }
 };
+
 function editCommentById(commentId) {
   const comment = comments.value.find((c) => c.CommentId === commentId);
   if (!comment) {
@@ -181,16 +186,16 @@ onMounted(async () => {
       </div>
     </div>
     <div v-if="user.role === 'admin'|| user.role ==='mod'"class="admin-controls">
-          <button @click="handleEditMovie">Edit Movie</button>
-          <button @click="handleDeleteMovie">Delete Movie</button>
-        </div>
+      <button @click="router.push(`/editmovie/${movieId}`)">Edit Movie</button>
+      <button @click="handleDeleteMovie">Delete Movie</button>
+    </div>
     <div class="comments-section">
       <h3>Comments</h3>
       <ul>
         <li v-for="comment in comments" :key="comment.CommentId">
           <div class="creativeclassname">
             <strong>{{ comment.Username }}:</strong>
-            <button v-if="isadmin || comment.Username === user.username"
+            <button v-if="user.role === 'admin' || comment.Username === user.username"
               @click="(e) => toggleMenu(comment.CommentId, e)" class="meatballmenuopend">
               <img class="meatballmenuimage" src="../assets/images/icons/meatballmenu.svg" alt="meatballmenu" />
             </button>
@@ -578,5 +583,23 @@ li {
   height: 350px;
   width: 100%;
   display: block;
+}
+
+.admin-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.admin-controls button {
+  color: #20242a;
+  background-color: #8ac379;
+  flex-grow: 1;
+  border: none;
+  border-radius: 10px;
+  height: 40px;
+  cursor: pointer;
 }
 </style>

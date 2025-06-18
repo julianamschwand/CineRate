@@ -1,11 +1,12 @@
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { getlanguages } from "@/api/routes/languageRoutes";
-import { addmovie } from "@/api/routes/movieRoutes";
-import LanguageDropdown from "@/components/LanguageDropdown.vue";
+import { addmovie, getallmoviedata, editmovie } from "@/api/routes/movieRoutes";
+import { isloggedin, userdata } from "@/api/routes/userRoutes";
 
 const router = useRouter();
+const route = useRoute();
 const languages = ref([]);
 const poster = ref(null);
 const title = ref({});
@@ -13,33 +14,57 @@ const description = ref({});
 const playbackid = ref("");
 const releaseyear = ref("")
 const duration = ref("")
+const movie = ref("")
+const movieId = route.params.id;
 
-onMounted(async () => {
-  try {
-    languages.value = await getlanguages();
-    languages.value = languages.value.languages;
+const urlSegments = route.path.split("/")
+const isEdit = urlSegments[urlSegments.length - 2] == "editmovie"
 
-    for (const i of languages.value) {
-      title.value[i.LanguageCode] = "";
-      description.value[i.LanguageCode] = "";
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-});
-
-async function handleAddmovie() {
+async function submitMovie() {
   try {
     const posterFile = poster.value.files[0] 
     title.value = Object.fromEntries(Object.entries(title.value).filter(([_, value]) => value.trim() !== ""));
     description.value = Object.fromEntries(Object.entries(description.value).filter(([_, value]) => value.trim() !== ""));
 
-    await addmovie(title.value, description.value, posterFile, playbackid.value, releaseyear.value, duration.value);
+    if (isEdit) {
+      await editmovie(movieId, title.value, description.value, posterFile, playbackid.value, releaseyear.value, duration.value);
+    } else {
+      await addmovie(title.value, description.value, posterFile, playbackid.value, releaseyear.value, duration.value);
+    }
+
     router.push("/");
   } catch (err) {
     console.log("Error adding movie:", err);
   }
 }
+
+onMounted(async () => {
+  const isLoggedIn = await isloggedin()
+  if (isLoggedIn?.loggedin) {
+    const userData = await userdata()
+    if (userData.role != "admin" && userData.role != "mod") {
+      router.push("/")
+    }
+  }
+
+  languages.value = await getlanguages();
+  languages.value = languages.value.languages;
+
+  if (isEdit) {
+    movie.value = await getallmoviedata(movieId)
+    duration.value = movie.value.movie.Duration
+    playbackid.value = movie.value.movie.PlaybackId
+    releaseyear.value = movie.value.movie.ReleaseYear
+
+    for (const [key, t] of Object.entries(movie.value.movie.Title)) {
+      title.value[key] = t
+    }
+
+    for (const [key, d] of Object.entries(movie.value.movie.Description)) {
+      description.value[key] = d
+    }
+  }
+});
 </script>
 
 <template>
@@ -95,7 +120,7 @@ async function handleAddmovie() {
           <input type="file" ref="poster" />
         </div>
       </div>
-      <button class="submit-button" @click.prevent="handleAddmovie">Add Movie</button>
+      <button class="submit-button" @click.prevent="submitMovie">{{ isEdit ? "Update Movie" : "Add Movie" }}</button>
     </div>
   </div>
 </template>
@@ -108,15 +133,6 @@ async function handleAddmovie() {
   width: 100%;
   height: 100%;
   padding: 10%;
-}
-button {
-  background-color: #8ac379;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  cursor: pointer;
-  margin-top: 20px;
 }
 .Addmovie-container {
   display: flex;
@@ -143,16 +159,6 @@ button {
   height: 25px;
   cursor: pointer;
 }
-#backbutton {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: #8ac379;
-  border: none;
-  border-radius: 10px;
-  height: 50px;
-  width: 50px;
-}
 input {
   background-color: #20242a;
   border-color: #8ac379;
@@ -170,5 +176,10 @@ input {
 
 .submit-button {
   color:#20242a;
+  border: none;
+  border-radius: 10px;
+  height: 30px;
+  background-color: #8ac379;
+  cursor: pointer;
 }
 </style>

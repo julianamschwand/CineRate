@@ -33,6 +33,11 @@ const router = createRouter({
       name: "addmovie",
       component: AddMovieView,
     },
+    {
+      path: "/editmovie/:id",
+      name: "editmovie",
+      component: AddMovieView
+    },
   ],
 });
 export default router;
