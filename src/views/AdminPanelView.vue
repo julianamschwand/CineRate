@@ -1,51 +1,49 @@
 <script setup>
 import { useRouter } from "vue-router";
 import { ref, onMounted, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { isloggedin, userdata } from "@/api/routes/userRoutes";
+import { isloggedin, userdata, rolemod, roleadmin, roleuser, deleteuser, getallusers } from "@/api/routes/userRoutes";
 
-const { t } = useI18n();
 const router = useRouter();
 
 const SearchQuery = ref("");
 
-const users = ref([
-  { username: "Pascal", role: "user" },
-  { username: "julian", role: "admin" },
-  { username: "gregoir", role: "user" },
-  { username: "fdsa", role: "user" },
-  { username: "ron", role: "mod" }
-]);
+const users = ref({users: []});
 
-// Placeholder functions
-function makeMod(username) {
-  console.log(`Make ${username} mod`);
-}
-function banthatmf(username) {
-  console.log(`Ban ${username}`);
-}
-function makeAdmin(username) {
-  console.log(`Make ${username} admin`);
+async function handleRoleUser(userId) {
+  await roleuser(userId)
+  window.location.reload()
 }
 
-const filteredUsers = computed(() =>
-  users.value.filter((user) =>
-    user.username.toLowerCase().includes(SearchQuery.value.toLowerCase())
+async function handleRoleAdmin(userId) {
+  await roleadmin(userId)
+  window.location.reload()
+}
+
+async function handleRoleMod(userId) {
+  await rolemod(userId)
+  window.location.reload()
+}
+
+async function handleDeleteUser(userId) {
+  await deleteuser(userId)
+  window.location.reload()
+}
+const filteredUsers = computed(() => 
+  users.value.users.filter((user) =>
+    user.Username.toLowerCase().includes(SearchQuery.value.toLowerCase())
   )
 );
 
 onMounted(async () => {
-  try {
-    const isLoggedIn = await isloggedin();
-    if (isLoggedIn?.loggedin) {
-      const userData = await userdata();
-      if (userData.role !== "admin" && userData.role !== "mod") {
-        router.push("/");
-      }
+  const isLoggedIn = await isloggedin();
+  if (isLoggedIn?.loggedin) {
+    const userData = await userdata();
+    if (userData.role !== "admin") {
+      router.push("/");
     }
-  } catch (err) {
-    console.error(err);
   }
+
+  users.value = await getallusers()
 });
 </script>
 
@@ -78,38 +76,38 @@ onMounted(async () => {
         </thead>
         <tbody>
           <tr class="list-body" v-for="user in filteredUsers" :key="user.username">
-            <td>{{ user.username }}</td>
-            <td>{{ user.role }}</td>
+            <td>{{ user.Username }}</td>
+            <td>{{ user.UserRole }}</td>
             <td class="action-buttons">
               <button
-                v-if="user.role == 'user'"
+                v-if="user.UserRole == 'user'"
                 class="action-button"
-                @click="handleRoleMod(user.username)"
+                @click="handleRoleMod(user.UserDataId)"
               >
                 Make Mod
               </button>
               <button
-                v-if="user.role == 'mod'"
+                v-if="user.UserRole == 'mod'"
                 class="action-button"
-                @click="handleRoleUser(user.username)"
+                @click="handleRoleUser(user.UserDataId)"
               >
                 Make User
               </button>
               <button
-                v-if="user.role !== 'admin'"
+                v-if="user.UserRole !== 'admin'"
                 class="action-button"
-                @click="handleRoleAdmin(user.username)"
+                @click="handleRoleAdmin(user.UserDataId)"
               >
                 Make Admin
               </button>
               <button
-                v-if="user.role !== 'admin'"
+                v-if="user.UserRole !== 'admin'"
                 class="action-button"
-                @click="handleDeleteUser(user.username)"
+                @click="handleDeleteUser(user.UserDataId)"
               >
                 Delete user
               </button>
-              <h2 class="admin-role"v-if="user.role=='admin'">mb
+              <h2 class="admin-role"v-if="user.UserRole=='admin'">ADMIN
               </h2>
             </td>
           </tr>
@@ -234,6 +232,6 @@ button {
     cursor: pointer;
 }
 .user-table tbody tr:nth-child(even) td {
-  background-color: #2d2d2d; 
+  background-color: #1c1f24; 
 }
 </style>

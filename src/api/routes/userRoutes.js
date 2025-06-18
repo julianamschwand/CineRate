@@ -19,6 +19,17 @@ export async function userdata() {
   }
 }
 
+export async function getallusers() {
+  try {
+    const res = await api.get("/getallusers");
+    return res.data;
+  } catch (error) {
+    console.error("Error:", error);
+    return null;
+  }
+}
+
+
 export async function register(username, email, password, selectedlanguage) {
   try {
     const res = await api.post("/register", {
